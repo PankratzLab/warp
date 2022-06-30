@@ -1079,7 +1079,7 @@ task PartitionSampleNameMap {
   }
 }
 
-task CalculateAverageScore {
+task CalculateAverageAnnotations {
   input {
     File vcf_index
     File vcf
