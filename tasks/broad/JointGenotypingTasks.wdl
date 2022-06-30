@@ -1086,7 +1086,7 @@ task CalculateAverageScore {
     Array[String] annotations_to_divide = ["ASSEMBLED_HAPS", "FILTERED_HAPS", "TREE_SCORE"]
 
     String docker = "us.gcr.io/broad-dsde-methods/broad-gatk-snapshots:UG_feature_branch_v4"
-    Int disk_size = ceil(size(vcf, "GB") + 50)
+    Int disk_size_gb = ceil(size(vcf, "GB") + 50)
     Int memory_mb = 12000
     Int preemptible = 3
     Int max_retries = 1
