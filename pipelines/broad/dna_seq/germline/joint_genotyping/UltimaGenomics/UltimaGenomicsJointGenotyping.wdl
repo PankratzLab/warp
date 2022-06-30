@@ -107,10 +107,17 @@ workflow UltimaGenomicsJointGenotyping {
           additional_annotation = "RawGtCount"
     }
 
-    call Tasks.HardFilterAndMakeSitesOnlyVcf {
+    #TODO: if this task becomes expensive or slow we should combine the functionality into GenotypeGVCFs in GATK
+    call Tasks.CalculateAverageAnnotations {
       input:
         vcf = GenotypeGVCFs.output_vcf,
-        vcf_index = GenotypeGVCFs.output_vcf_index,
+        vcf_index = GenotypeGVCFs.output_vcf_index
+    }
+
+    call Tasks.HardFilterAndMakeSitesOnlyVcf {
+      input:
+        vcf = CalculateAverageAnnotations.output_vcf,
+        vcf_index = CalculateAverageAnnotations.output_vcf_index,
         excess_het_threshold = excess_het_threshold,
         variant_filtered_vcf_filename = callset_name + "." + idx + ".variant_filtered.vcf.gz",
         sites_only_vcf_filename = callset_name + "." + idx + ".sites_only.variant_filtered.vcf.gz",
@@ -255,8 +262,8 @@ workflow UltimaGenomicsJointGenotyping {
   File output_summary_metrics_file = select_first([CollectMetricsOnFullVcf.summary_metrics_file, GatherVariantCallingMetrics.summary_metrics_file])
 
   # Get the VCFs from either code path
-  Array[File?] output_vcf_files = if defined(FinalGatherVcf.output_vcf) then [FinalGatherVcf.output_vcf] else HardFilterAndMakeSitesOnlyVcf.variant_filtered_vcf
-  Array[File?] output_vcf_index_files = if defined(FinalGatherVcf.output_vcf_index) then [FinalGatherVcf.output_vcf_index] else HardFilterAndMakeSitesOnlyVcf.variant_filtered_vcf_index
+  Array[File?] output_vcf_files = if defined(FinalGatherVcf.output_vcf) then [FinalGatherVcf.output_vcf] else CalculateAverageAnnotations.output_vcf
+  Array[File?] output_vcf_index_files = if defined(FinalGatherVcf.output_vcf_index) then [FinalGatherVcf.output_vcf_index] else CalculateAverageAnnotations.output_vcf_index
 
   output {
     # Metrics from either the small or large callset
