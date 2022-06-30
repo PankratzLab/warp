@@ -1115,3 +1115,169 @@ task MoveAnnotationsToGvcf {
     disks: "local-disk ${disk_size_gb} HDD"
   }
 }
+
+#Tasks for filter joing callsets
+
+task ExtractVariantAnnotations {
+  input {
+    File gatk_jar
+    File input_vcf
+    File input_vcf_index
+    String basename
+    String mode
+    String annotations
+    String resources
+    String? interval_contig
+  }
+  Int disk_size = ceil(size(input_vcf, "GB") + 50)
+  String interval_arg = if defined(interval_contig) then "-L " + interval_contig else ""
+  command {
+    java -Xms13g -jar ~{gatk_jar} \
+    ExtractVariantAnnotations \
+    ~{interval_arg} \
+    -V ~{input_vcf} \
+    -O ~{basename}.~{mode} \
+    ~{annotations} \
+    -mode ~{mode} \
+    ~{resources}
+  }
+  output {
+    File annots = "~{basename}.~{mode}.annot.hdf5"
+    File extracted_training_vcf = "~{basename}.~{mode}.vcf.gz"
+    File extracted_training_vcf_index = "~{basename}.~{mode}.vcf.gz.tbi"
+  }
+  runtime {
+    docker: "us.gcr.io/broad-gatk/gatk:4.2.4.1"
+    disks: "local-disk " + disk_size + " LOCAL"
+    memory: "14 GB"
+  }
+}
+
+task TrainVariantAnnotationModel {
+  input {
+    File gatk_jar
+    File annots
+    String basename
+    String mode_uc
+    String mode_lc
+    File python_script
+    File hyperparameters_json
+  }
+  Int disk_size = ceil(size(annots, "GB") + 100)
+  command {
+    set -e
+
+    conda install -y --name gatk dill
+
+    java -Xms13g -jar ~{gatk_jar} \
+    TrainVariantAnnotationsModel \
+    --annotations-hdf5 ~{annots} \
+    -O ~{basename} \
+    --python-script ~{python_script} \
+    --hyperparameters-json ~{hyperparameters_json} \
+    -mode ~{mode_uc}
+
+  }
+  output {
+    File scorer = "~{basename}.~{mode_lc}.scorer.pkl"
+    File training_scores = "~{basename}.~{mode_lc}.trainingScores.hdf5"
+    File truth_scores = "~{basename}.~{mode_lc}.calibrationScores.hdf5"
+  }
+  runtime {
+    docker: "us.gcr.io/broad-gatk/gatk:4.2.4.1"
+    disks: "local-disk " + disk_size + " LOCAL"
+    memory: "14 GB"
+  }
+}
+
+task ScoreVariantAnnotations {
+  input {
+    File gatk_jar
+    File vcf
+    File vcf_index
+    String basename
+    String mode
+    File scoring_python_script
+    String annotations
+    String resources
+    File extracted_training_vcf
+    File extracted_training_vcf_index
+    String? interval_contig
+    File model
+  }
+  Int disk_size = ceil(size(vcf, "GB") *2 + 50)
+  String interval_arg = if defined(interval_contig) then "-L " + interval_contig else ""
+  String model_basename = basename(model)
+  command {
+    set -e
+
+    ln -s ~{model} ~{model_basename}
+
+    conda install -y --name gatk dill
+
+    java -Xms15g -jar ~{gatk_jar} \
+    ScoreVariantAnnotations \
+    ~{interval_arg} \
+    -V ~{vcf} \
+    -O ~{basename}.~{mode} \
+    --python-script ~{scoring_python_script} \
+    --model-prefix ~{basename} \
+    ~{annotations} \
+    -mode ~{mode} \
+    --resource:extracted-training,training=true,calibration=false ~{extracted_training_vcf} \
+    ~{resources}
+  }
+  output {
+    File scores = "~{basename}.~{mode}.scores.hdf5"
+    File annots = "~{basename}.~{mode}.annot.hdf5"
+    File recal_vcf = "~{basename}.~{mode}.vcf.gz"
+    File recal_vcf_idx = "~{basename}.~{mode}.vcf.gz.tbi"
+  }
+  runtime {
+    docker: "us.gcr.io/broad-gatk/gatk:4.2.4.1"
+    disks: "local-disk " + disk_size + " LOCAL"
+    memory: "16 GB"
+  }
+}
+
+task ApplyVariantAnnotationScores {
+  input {
+    File gatk_jar
+    File input_vcf
+    File input_vcf_index
+    File tranches
+    File recal_vcf
+    File recal_vcf_idx
+    String basename
+    String filename_mode
+    String mode
+    String? interval_contig
+    Float sensitivity
+  }
+  parameter_meta {
+    input_vcf: {localization_optional: true}
+  }
+  Int disk_size = ceil(size(input_vcf, "GB") + 50)
+  String interval_arg = if defined(interval_contig) then "-L " + interval_contig else ""
+  command {
+    java -Xms15g -jar ~{gatk_jar} \
+    ApplyVariantAnnotationScores \
+    ~{interval_arg} \
+    -V ~{input_vcf} \
+    -O ~{basename}.~{filename_mode}.vcf.gz \
+    --tranches-file ~{tranches} \
+    --recal-file ~{recal_vcf} \
+    -mode ~{mode} \
+    --truth-sensitivity-filter-level ~{sensitivity}
+  }
+  output {
+    File output_vcf = "~{basename}.~{filename_mode}.vcf.gz"
+    File output_vcf_index = "~{basename}.~{filename_mode}.vcf.gz.tbi"
+  }
+  runtime {
+    docker: "us.gcr.io/broad-gatk/gatk:4.2.4.1"
+    disks: "local-disk " + disk_size + " LOCAL"
+    memory: "16 GB"
+  }
+}
+

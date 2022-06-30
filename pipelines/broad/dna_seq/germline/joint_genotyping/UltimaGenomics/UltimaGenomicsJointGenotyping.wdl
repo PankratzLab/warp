@@ -1,6 +1,7 @@
 version 1.0
 
 import "../../../../../../tasks/broad/JointGenotypingTasks.wdl" as Tasks
+import "../../../../../../tasks/broad/UltimaGenomicsGermlineJointFiltering" as Filtering
 
 
 # Joint Genotyping for hg38 Whole Genomes (has not been tested on hg19)
@@ -33,6 +34,11 @@ workflow UltimaGenomicsJointGenotyping {
     # ExcessHet is a phred-scaled p-value. We want a cutoff of anything more extreme
     # than a z-score of -4.5 which is a p-value of 3.4e-06, which phred-scaled is 54.69
     Float excess_het_threshold = 54.69
+
+    Float indel_sensitivity_threshold
+    Float snp_sensitivity_threshold
+    String snp_annotations
+    String indel_annotations
 
     Int? top_level_scatter_count
     Boolean? gather_vcfs
@@ -132,13 +138,25 @@ workflow UltimaGenomicsJointGenotyping {
       disk_size = medium_disk
   }
 
-  scatter (idx in range(length(HardFilterAndMakeSitesOnlyVcf.variant_filtered_vcf))) {
+  call UltimaGenomicsGermlineJointFiltering.UltimaGenomicsGermlineJointFiltering {
+    input:
+      vcf = CalculateAverageAnnotations.output_vcf,
+      vcf_index = CalculateAverageAnnotations.output_vcf_index,
+      sites_only_vcf = SitesOnlyGatherVcf.output_vcf,
+      sites_only_vcf_index = SitesOnlyGatherVcf.output_vcf_index,
+      indel_sensitivity_threshold = indel_sensitivity_threshold,
+      snp_sensitivity_threshold = snp_sensitivity_threshold,
+      snp_annotations = snp_annotations,
+      indel_annotations = indel_annotations
+  }
+
+  scatter (idx in range(length(UltimaGenomicsGermlineJointFiltering.variant_filtered_vcf))) {
     # For large callsets we need to collect metrics from the shards and gather them later.
     if (!is_small_callset) {
       call Tasks.CollectVariantCallingMetrics as CollectMetricsSharded {
         input:
-          input_vcf = HardFilterAndMakeSitesOnlyVcf.variant_filtered_vcf[idx],
-          input_vcf_index = HardFilterAndMakeSitesOnlyVcf.variant_filtered_vcf_index[idx],
+          input_vcf = UltimaGenomicsGermlineJointFiltering.variant_filtered_vcf[idx],
+          input_vcf_index = UltimaGenomicsGermlineJointFiltering.variant_filtered_vcf_index[idx],
           metrics_filename_prefix = callset_name + "." + idx,
           dbsnp_vcf = dbsnp_vcf,
           dbsnp_vcf_index = dbsnp_vcf_index,
@@ -153,7 +171,7 @@ workflow UltimaGenomicsJointGenotyping {
   if (is_small_callset) {
     call Tasks.GatherVcfs as FinalGatherVcf {
       input:
-        input_vcfs = HardFilterAndMakeSitesOnlyVcf.variant_filtered_vcf,
+        input_vcfs = UltimaGenomicsGermlineJointFiltering.variant_filtered_vcf,
         output_vcf_name = callset_name + ".vcf.gz",
         disk_size = huge_disk
     }
@@ -262,20 +280,17 @@ workflow UltimaGenomicsJointGenotyping {
   File output_summary_metrics_file = select_first([CollectMetricsOnFullVcf.summary_metrics_file, GatherVariantCallingMetrics.summary_metrics_file])
 
   # Get the VCFs from either code path
-  Array[File?] output_vcf_files = if defined(FinalGatherVcf.output_vcf) then [FinalGatherVcf.output_vcf] else CalculateAverageAnnotations.output_vcf
-  Array[File?] output_vcf_index_files = if defined(FinalGatherVcf.output_vcf_index) then [FinalGatherVcf.output_vcf_index] else CalculateAverageAnnotations.output_vcf_index
+  Array[File?] output_vcf_files = if defined(FinalGatherVcf.output_vcf) then [FinalGatherVcf.output_vcf] else UltimaGenomicsGermlineJointFiltering.variant_filtered_vcf
+  Array[File?] output_vcf_index_files = if defined(FinalGatherVcf.output_vcf_index) then [FinalGatherVcf.output_vcf_index] else UltimaGenomicsGermlineJointFiltering.variant_filtered_vcf_index
 
   output {
     # Metrics from either the small or large callset
-    File unfiltered_detail_metrics_file = output_detail_metrics_file
-    File unfiltered_summary_metrics_file = output_summary_metrics_file
+    File detail_metrics_file = output_detail_metrics_file
+    File summary_metrics_file = output_summary_metrics_file
 
     # Outputs from the small callset path through the wdl.
-    Array[File] unfiltered_output_vcfs = select_all(output_vcf_files)
-    Array[File] unfiltered_output_vcf_indices = select_all(output_vcf_index_files)
-
-    File unfiltered_sites_only_vcf = SitesOnlyGatherVcf.output_vcf
-    File unfiltered_sites_only_vcf_index = SitesOnlyGatherVcf.output_vcf_index
+    Array[File] output_vcfs = select_all(UltimaGenomicsGermlineJointFiltering.output_vcf)
+    Array[File] output_vcf_indices = select_all(UltimaGenomicsGermlineJointFiltering.output_vcf_index)
 
     # Output the interval list generated/used by this run workflow.
     Array[File] output_intervals = SplitIntervalList.output_intervals
