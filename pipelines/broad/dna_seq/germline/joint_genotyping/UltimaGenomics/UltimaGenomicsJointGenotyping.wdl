@@ -138,7 +138,7 @@ workflow UltimaGenomicsJointGenotyping {
       disk_size = medium_disk
   }
 
-  call UltimaGenomicsGermlineJointFiltering.UltimaGenomicsGermlineJointFiltering {
+  call Filtering.UltimaGenomicsGermlineJointFiltering {
     input:
       vcf = CalculateAverageAnnotations.output_vcf,
       vcf_index = CalculateAverageAnnotations.output_vcf_index,
