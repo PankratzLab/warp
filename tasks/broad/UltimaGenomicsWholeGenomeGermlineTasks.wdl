@@ -1230,8 +1230,8 @@ task ScoreVariantAnnotations {
   output {
     File scores = "~{basename}.~{mode}.scores.hdf5"
     File annots = "~{basename}.~{mode}.annot.hdf5"
-    File recal_vcf = "~{basename}.~{mode}.vcf.gz"
-    File recal_vcf_idx = "~{basename}.~{mode}.vcf.gz.tbi"
+    File output_vcf = "~{basename}.~{mode}.vcf.gz"
+    File output_vcf_index = "~{basename}.~{mode}.vcf.gz.tbi"
   }
   runtime {
     docker: "us.gcr.io/broad-gatk/gatk:4.2.4.1"

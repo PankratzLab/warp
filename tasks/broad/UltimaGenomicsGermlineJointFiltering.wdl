@@ -82,7 +82,7 @@ workflow UltimaGenomicsGermlineJointFiltering {
 				annotations = snp_annotations,
 				extracted_training_vcf = ExtractVariantAnnotationsSNPs.extracted_training_vcf,
 				extracted_training_vcf_index = ExtractVariantAnnotationsSNPs.extracted_training_vcf_index,
-				interval_contig = contig,
+				interval_contig = interval_contig,
 				model = TrainVariantAnnotationModelSNPs.scorer,
 				resources = "-resource:hapmap,training=false,calibration=true,prior=15 gs://gcp-public-data--broad-references/hg38/v0/hapmap_3.3.hg38.vcf.gz -resource:omni,training=false,calibration=true,prior=12 gs://gcp-public-data--broad-references/hg38/v0/1000G_omni2.5.hg38.vcf.gz"
 		}
