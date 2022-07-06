@@ -8,6 +8,7 @@ workflow UltimaGenomicsGermlineJointFiltering {
 		Array[File] vcf_index
 		File sites_only_vcf
 		File sites_only_vcf_index
+		String basename
 
 		#TODO delete these inputs
 		File python_script = "gs://broad-dsp-spec-ops/scratch/mshand/Jukebox/TestInputs/isolation-forest_v1.py"
@@ -21,8 +22,6 @@ workflow UltimaGenomicsGermlineJointFiltering {
 		String snp_annotations
 		String indel_annotations
 	}
-
-	String basename = basename(vcf, ".vcf.gz")
 
 	call UltimaFilteringTasks.ExtractVariantAnnotations as ExtractVariantAnnotationsSNPs {
 		input:

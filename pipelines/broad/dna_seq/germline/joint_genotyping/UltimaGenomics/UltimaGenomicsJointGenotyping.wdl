@@ -147,7 +147,8 @@ workflow UltimaGenomicsJointGenotyping {
       indel_sensitivity_threshold = indel_sensitivity_threshold,
       snp_sensitivity_threshold = snp_sensitivity_threshold,
       snp_annotations = snp_annotations,
-      indel_annotations = indel_annotations
+      indel_annotations = indel_annotations,
+      basename = callset_name
   }
 
   scatter (idx in range(length(UltimaGenomicsGermlineJointFiltering.variant_filtered_vcf))) {
