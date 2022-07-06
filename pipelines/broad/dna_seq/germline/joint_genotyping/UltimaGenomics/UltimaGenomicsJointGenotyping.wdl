@@ -290,8 +290,8 @@ workflow UltimaGenomicsJointGenotyping {
     File summary_metrics_file = output_summary_metrics_file
 
     # Outputs from the small callset path through the wdl.
-    Array[File] output_vcfs = select_all(UltimaGenomicsGermlineJointFiltering.output_vcf)
-    Array[File] output_vcf_indices = select_all(UltimaGenomicsGermlineJointFiltering.output_vcf_index)
+    Array[File] output_vcfs = select_all(UltimaGenomicsGermlineJointFiltering.variant_filtered_vcf)
+    Array[File] output_vcf_indices = select_all(UltimaGenomicsGermlineJointFiltering.variant_filtered_vcf_index)
 
     # Output the interval list generated/used by this run workflow.
     Array[File] output_intervals = SplitIntervalList.output_intervals
