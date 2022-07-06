@@ -1,7 +1,7 @@
 version 1.0
 
 import "../../../../../../tasks/broad/JointGenotypingTasks.wdl" as Tasks
-import "../../../../../../tasks/broad/UltimaGenomicsGermlineJointFiltering" as Filtering
+import "../../../../../../tasks/broad/UltimaGenomicsGermlineJointFiltering.wdl" as Filtering
 
 
 # Joint Genotyping for hg38 Whole Genomes (has not been tested on hg19)

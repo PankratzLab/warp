@@ -1,6 +1,6 @@
 version 1.0
 
-import "../../tasks/broad/UltimaGenomicsWholeGenomeGermlineTasks" as UltimaFilteringTasks
+import "../../tasks/broad/UltimaGenomicsWholeGenomeGermlineTasks.wdl" as UltimaFilteringTasks
 
 workflow UltimaGenomicsGermlineJointFiltering {
 	input {
