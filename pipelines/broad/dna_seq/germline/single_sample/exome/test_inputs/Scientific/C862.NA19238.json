@@ -25,10 +25,17 @@
   },
 
   "ExomeGermlineSingleSample.references": {
+    
+    
+    # What are these?
     "contamination_sites_ud": "gs://gcp-public-data--broad-references/hg38/v0/contamination-resources/1000g/1000g.phase3.100k.b38.vcf.gz.dat.UD",
     "contamination_sites_bed": "gs://gcp-public-data--broad-references/hg38/v0/contamination-resources/1000g/1000g.phase3.100k.b38.vcf.gz.dat.bed",
     "contamination_sites_mu": "gs://gcp-public-data--broad-references/hg38/v0/contamination-resources/1000g/1000g.phase3.100k.b38.vcf.gz.dat.mu",
+   
+    
     "calling_interval_list": "gs://gcp-public-data--broad-references/hg38/v0/exome_calling_regions.v1.interval_list",
+    
+    
     "reference_fasta": {
       "ref_dict": "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.dict",
       
@@ -53,10 +60,14 @@
     ],
     "dbsnp_vcf": "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf",
     "dbsnp_vcf_index": "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf.idx",
-    "evaluation_interval_list": "gs://gcp-public-data--broad-references/hg38/v0/exome_evaluation_regions.v1.interval_list",
+   
+      # What are these - is evaluation_interval_list different than calling_interval_list, or different than the target capture?
+  "evaluation_interval_list": "gs://gcp-public-data--broad-references/hg38/v0/exome_evaluation_regions.v1.interval_list",
+  # What is this?
     "haplotype_database_file": "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.haplotype_database.txt"
   },
 
+ # What is this?
   "ExomeGermlineSingleSample.scatter_settings": {
     "haplotype_scatter_count": 50,
     "break_bands_at_multiples_of": 0
@@ -64,7 +75,11 @@
 
   "ExomeGermlineSingleSample.fingerprint_genotypes_file": "gs://broad-gotc-test-storage/germline_single_sample/exome/scientific/bams/C862.NA19238/C862.NA19238.reference.fingerprint.vcf.gz",
   "ExomeGermlineSingleSample.fingerprint_genotypes_index": "gs://broad-gotc-test-storage/germline_single_sample/exome/scientific/bams/C862.NA19238/C862.NA19238.reference.fingerprint.vcf.gz.tbi",
-  "ExomeGermlineSingleSample.target_interval_list": "gs://broad-references-private/HybSelOligos/whole_exome_agilent_1.1_refseq_plus_3_boosters/whole_exome_agilent_1.1_refseq_plus_3_boosters.Homo_sapiens_assembly38.targets.interval_list",
+ 
+
+      # Are these the actual target capture kit, how differ from above interval arguments?
+
+"ExomeGermlineSingleSample.target_interval_list": "gs://broad-references-private/HybSelOligos/whole_exome_agilent_1.1_refseq_plus_3_boosters/whole_exome_agilent_1.1_refseq_plus_3_boosters.Homo_sapiens_assembly38.targets.interval_list",
   "ExomeGermlineSingleSample.bait_interval_list": "gs://broad-references-private/HybSelOligos/whole_exome_agilent_1.1_refseq_plus_3_boosters/whole_exome_agilent_1.1_refseq_plus_3_boosters.Homo_sapiens_assembly38.baits.interval_list",
   "ExomeGermlineSingleSample.bait_set_name": "whole_exome_agilent_1.1_refseq_plus_3_boosters",
 
