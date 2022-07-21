@@ -11,6 +11,7 @@ struct SampleAndUnmappedBams {
 struct PairedFastqs {
   String fastq1
   String fastq2
+  String readgroup_format
 }
 
 struct ReferenceFasta {
