@@ -8,6 +8,11 @@ struct SampleAndUnmappedBams {
   String unmapped_bam_suffix
 }
 
+struct PairedFastqs {
+  String fastq1
+  String fastq2
+}
+
 struct ReferenceFasta {
   File ref_dict
   File ref_fasta
