@@ -9,8 +9,16 @@ struct SampleAndUnmappedBams {
 }
 
 struct PairedFastqs {
-  String fastq1
-  String fastq2
+  File read1
+  File read2
+}
+
+struct SampleAndPairedFastqs {
+  String base_file_name
+  String? final_gvcf_base_name
+  Array[PairedFastqs] flowcell_paired_fastqs
+  String sample_name
+  String paired_fastqs_suffix
   String readgroup_format
 }
 
