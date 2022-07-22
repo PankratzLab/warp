@@ -44,7 +44,8 @@ workflow ExomeGermlineSingleSample {
 
   input {
     PapiSettings papi_settings
-    SampleAndUnmappedBams sample_and_unmapped_bams
+    SampleAndUnmappedBams? sample_and_unmapped_bams
+    SampleAndPairedFastqs? sample_and_paired_fastqs
     DNASeqSingleSampleReferences references
     VariantCallingScatterSettings scatter_settings
 
@@ -79,6 +80,7 @@ workflow ExomeGermlineSingleSample {
   call ToBam.UnmappedBamToAlignedBam {
     input:
       sample_and_unmapped_bams = sample_and_unmapped_bams,
+      paired_fastqs = paired_fastqs,
       references = references,
       papi_settings = papi_settings,
 

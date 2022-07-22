@@ -123,8 +123,16 @@ task HaplotypeCaller_GATK4_VCF {
     # memory_size_gb because of Cromwell's retry with more memory feature.
     # Note: In the future this should be done using Cromwell's ${MEM_SIZE} and ${MEM_UNIT} environment variables,
     #       which do not rely on the output format of the `free` command.
+
+    # Note: On MSI, the free command will report back the full ram of the node, rather than what we can actually reserve. 
+    # This amount differs by node
+    # TO counteract, we will let java_memory_size_mb be ~90% of the available. This is not a perfect solution and is a little wasteful, we could implement partition specific limits instead
+    
     available_memory_mb=$(free -m | awk '/^Mem/ {print $2}')
-    let java_memory_size_mb=available_memory_mb-5120
+    buffer=0.10
+    t=$(echo $buffer*$available_memory_mb| bc|  awk '{print int($1+0.5)}')
+    let java_memory_size_mb=available_memory_mb-t
+
     echo Total available memory: ${available_memory_mb} MB >&2
     echo Memory reserved for Java: ${java_memory_size_mb} MB >&2
 
