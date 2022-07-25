@@ -49,7 +49,7 @@ workflow PairedFastqsToAlignedBam {
 
     String paired_fastqs_basename = basename(read1, sample_and_paired_fastqs.paired_fastqs_suffix)
 
-    call Alignment.PairedFastqsToBwaMemAndMba as PairedFastqsToBwaMemAndMba {
+    call Alignment.PairedFastqsToBwaMem as PairedFastqsToBwaMem {
           input:
             read1 = read1,
             read2 = read2,
