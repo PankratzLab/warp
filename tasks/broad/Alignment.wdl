@@ -22,7 +22,7 @@ task PairedFastqsToBwaMemAndMba {
   input {
     File read1
     File read2
-    String readgroup_fmt
+    String readgroup_format
     String bwa_commandline
     String output_bam_basename
 
@@ -63,7 +63,7 @@ task PairedFastqsToBwaMemAndMba {
     fi
 
     # set the bash variables needed for the command-line
-    bash_readgroup_fmt=~{readgroup_format}
+    bash_readgroup_format=~{readgroup_format}
     bash_ref_fasta=~{reference_fasta.ref_fasta}
     bash_fastq1=~{read1}
     bash_fastq2=~{read2}
