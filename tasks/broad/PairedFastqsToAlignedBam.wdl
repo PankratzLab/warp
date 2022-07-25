@@ -64,7 +64,7 @@ workflow PairedFastqsToAlignedBam {
             allow_empty_ref_alt = allow_empty_ref_alt
         }
         
-    File output_aligned_bam = select_first([SamToFastqAndBwaMemAndMba.output_bam, SamToFastqAndDragmapAndMba.output_bam, SplitRG.aligned_bam])
+    File output_aligned_bam = select_first([PairedFastqsToBwaMem.output_bam])
 
     Float mapped_bam_size = size(output_aligned_bam, "GiB")
 
