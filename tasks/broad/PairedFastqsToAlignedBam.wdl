@@ -55,7 +55,7 @@ workflow PairedFastqsToAlignedBam {
             read2 = read2,
             readgroup_format = sample_and_paired_fastqs.readgroup_format,
             bwa_commandline = bwa_commandline,
-            output_bam_basename = fastq_basename + ".aligned.unsorted",
+            output_bam_basename = paired_fastqs_basename + ".aligned.unsorted",
             reference_fasta = references.reference_fasta,
             compression_level = compression_level,
             preemptible_tries = papi_settings.preemptible_tries,
