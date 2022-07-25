@@ -41,7 +41,7 @@ workflow PairedFastqsToAlignedBam {
   # Get the size of the standard reference files as well as the additional reference files needed for BWA
 
   # Align flowcell-level input fastq pairs in parallel
-  scatter (PairedFastqs paired_fastqs in sample_and_paired_fastqs.flowcell_paired_fastqs) {
+  scatter (paired_fastqs in sample_and_paired_fastqs.flowcell_paired_fastqs) {
 
     File read1 = paired_fastqs.read1
     File read2 = paired_fastqs.read2
