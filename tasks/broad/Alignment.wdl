@@ -17,8 +17,8 @@ version 1.0
 
 import "../../structs/dna_seq/DNASeqStructs.wdl"
 
-# Pass paired-end read FASTQ files to BWA MEM for alignment, then stream to MergeBamAlignment
-task PairedFastqsToBwaMemAndMba {
+# Pass paired-end read FASTQ files to BWA MEM for alignment
+task PairedFastqsToBwaMem {
   input {
     File read1
     File read2
@@ -69,37 +69,8 @@ task PairedFastqsToBwaMemAndMba {
     bash_fastq2=~{read2}
     # if reference_fasta.ref_alt has data in it or allow_empty_ref_alt is set
     if [ -s ~{reference_fasta.ref_alt} ] || ~{allow_empty_ref_alt}; then
-      java -Xms1000m -Xmx1000m -jar /usr/gitc/~{bwa_commandline} /dev/stdin - 2> >(tee ~{output_bam_basename}.bwa.stderr.log >&2) | \
-      java -Dsamjdk.compression_level=~{compression_level} -Xms1000m -Xmx1000m -jar /usr/gitc/picard.jar \
-        MergeBamAlignment \
-        VALIDATION_STRINGENCY=SILENT \
-        EXPECTED_ORIENTATIONS=FR \
-        ATTRIBUTES_TO_RETAIN=X0 \
-        ATTRIBUTES_TO_REMOVE=NM \
-        ATTRIBUTES_TO_REMOVE=MD \
-        ALIGNED_BAM=/dev/stdin \
-        UNMAPPED_BAM=~{input_bam} \
-        OUTPUT=~{output_bam_basename}.bam \
-        REFERENCE_SEQUENCE=~{reference_fasta.ref_fasta} \
-        SORT_ORDER="unsorted" \
-        IS_BISULFITE_SEQUENCE=false \
-        ALIGNED_READS_ONLY=false \
-        CLIP_ADAPTERS=false \
-        ~{true='CLIP_OVERLAPPING_READS=true' false="" hard_clip_reads} \
-        ~{true='CLIP_OVERLAPPING_READS_OPERATOR=H' false="" hard_clip_reads} \
-        MAX_RECORDS_IN_RAM=2000000 \
-        ADD_MATE_CIGAR=true \
-        MAX_INSERTIONS_OR_DELETIONS=-1 \
-        PRIMARY_ALIGNMENT_STRATEGY=MostDistant \
-        PROGRAM_RECORD_ID="bwamem" \
-        PROGRAM_GROUP_VERSION="${BWA_VERSION}" \
-        PROGRAM_GROUP_COMMAND_LINE="~{bwa_commandline}" \
-        PROGRAM_GROUP_NAME="bwamem" \
-        UNMAPPED_READ_STRATEGY=COPY_TO_TAG \
-        ALIGNER_PROPER_PAIR_FLAGS=true \
-        UNMAP_CONTAMINANT_READS=~{unmap_contaminant_reads} \
-        ADD_PG_TAG_TO_READS=false
-
+      java -Xms1000m -Xmx1000m -jar /usr/gitc/~{bwa_commandline} ~{output_bam_basename}.bam - 2> >(tee ~{output_bam_basename}.bwa.stderr.log >&2)
+      
       if ~{!allow_empty_ref_alt}; then
         grep -m1 "read .* ALT contigs" ~{output_bam_basename}.bwa.stderr.log | \
         grep -v "read 0 ALT contigs"
