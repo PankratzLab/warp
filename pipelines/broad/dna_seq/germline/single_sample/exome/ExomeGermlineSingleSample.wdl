@@ -29,7 +29,6 @@ version 1.0
 ## licensing information pertaining to the included programs.
 
 import "../../../../../../tasks/broad/UnmappedBamToAlignedBam.wdl" as ToBam
-import "../../../../../../tasks/broad/PairedFastqsToAlignedBam.wdl" as FastqsToBam
 import "../../../../../../tasks/broad/AggregatedBamQC.wdl" as AggregatedQC
 import "../../../../../../tasks/broad/Qc.wdl" as QC
 import "../../../../../../tasks/broad/BamProcessing.wdl" as Processing
@@ -45,8 +44,7 @@ workflow ExomeGermlineSingleSample {
 
   input {
     PapiSettings papi_settings
-    SampleAndUnmappedBams? sample_and_unmapped_bams
-    SampleAndPairedFastqs? sample_and_paired_fastqs
+    SampleAndUnmappedBams sample_and_unmapped_bams
     DNASeqSingleSampleReferences references
     VariantCallingScatterSettings scatter_settings
 
@@ -63,10 +61,10 @@ workflow ExomeGermlineSingleSample {
   # Not overridable:
   Float lod_threshold = -10.0
   String cross_check_fingerprints_by = "READGROUP"
-  String recalibrated_bam_basename = if defined(sample_and_paired_fastqs) then sample_and_paired_fastqs.base_file_name + ".aligned.duplicates_marked.recalibrated" else sample_and_unmapped_bams.base_file_name + ".aligned.duplicates_marked.recalibrated"
+  String recalibrated_bam_basename = sample_and_unmapped_bams.base_file_name + ".aligned.duplicates_marked.recalibrated"
 
-  String final_gvcf_base_name = if defined(sample_and_paired_fastqs) then select_first([sample_and_paired_fastqs.final_gvcf_base_name, sample_and_paired_fastqs.base_file_name]) else select_first([sample_and_unmapped_bams.final_gvcf_base_name, sample_and_unmapped_bams.base_file_name]) 
-
+  String final_gvcf_base_name = select_first([sample_and_unmapped_bams.final_gvcf_base_name, sample_and_unmapped_bams.base_file_name])
+  
   call Processing.GenerateSubsettedContaminationResources {
     input:
         bait_set_name = bait_set_name,
@@ -76,41 +74,21 @@ workflow ExomeGermlineSingleSample {
         contamination_sites_ud = references.contamination_sites_ud,
         preemptible_tries = papi_settings.preemptible_tries
   }
-  
-  if( defined(sample_and_paired_fastqs) ) {
-     call FastqsToBam.PairedFastqsToAlignedBam {
-       input:
-         sample_and_paired_fastqs = sample_and_paired_fastqs,
-         references = references,
-         papi_settings = papi_settings,
 
-         contamination_sites_ud = GenerateSubsettedContaminationResources.subsetted_contamination_ud,
-         contamination_sites_bed = GenerateSubsettedContaminationResources.subsetted_contamination_bed,
-         contamination_sites_mu = GenerateSubsettedContaminationResources.subsetted_contamination_mu,
+  call ToBam.UnmappedBamToAlignedBam {
+    input:
+      sample_and_unmapped_bams = sample_and_unmapped_bams,
+      references = references,
+      papi_settings = papi_settings,
 
-         cross_check_fingerprints_by = cross_check_fingerprints_by,
-         haplotype_database_file = references.haplotype_database_file,
-         lod_threshold = lod_threshold,
-         recalibrated_bam_basename = recalibrated_bam_basename
-     }
-  }
-    
-  if( defined(sample_and_unmapped_bams) ) {
-     call ToBam.UnmappedBamToAlignedBam {
-       input:
-         sample_and_unmapped_bams = sample_and_unmapped_bams,
-         references = references,
-         papi_settings = papi_settings,
+      contamination_sites_ud = GenerateSubsettedContaminationResources.subsetted_contamination_ud,
+      contamination_sites_bed = GenerateSubsettedContaminationResources.subsetted_contamination_bed,
+      contamination_sites_mu = GenerateSubsettedContaminationResources.subsetted_contamination_mu,
 
-         contamination_sites_ud = GenerateSubsettedContaminationResources.subsetted_contamination_ud,
-         contamination_sites_bed = GenerateSubsettedContaminationResources.subsetted_contamination_bed,
-         contamination_sites_mu = GenerateSubsettedContaminationResources.subsetted_contamination_mu,
-
-         cross_check_fingerprints_by = cross_check_fingerprints_by,
-         haplotype_database_file = references.haplotype_database_file,
-         lod_threshold = lod_threshold,
-         recalibrated_bam_basename = recalibrated_bam_basename
-     }
+      cross_check_fingerprints_by = cross_check_fingerprints_by,
+      haplotype_database_file = references.haplotype_database_file,
+      lod_threshold = lod_threshold,
+      recalibrated_bam_basename = recalibrated_bam_basename
   }
   
   call AggregatedQC.AggregatedBamQC {
