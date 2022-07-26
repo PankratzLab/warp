@@ -23,7 +23,7 @@ import "../../../../../../pipelines/broad/dna_seq/germline/variant_calling/Varia
 import "../../../../../../structs/dna_seq/DNASeqStructs.wdl"
 
 # WORKFLOW DEFINITION
-workflow ExomeGermlineSingleSample {
+workflow PankratzExomeGermlineSingleSample {
 
   String pipeline_version = "3.1.5"
 
