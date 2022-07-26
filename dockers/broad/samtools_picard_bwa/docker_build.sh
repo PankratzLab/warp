@@ -11,7 +11,7 @@ GCR_URL="us.gcr.io/broad-gotc-prod/samtools-picard-bwa"
 QUAY_URL="quay.io/broadinstitute/gotc-prod-samtools_picard_bwa"
 
 # BWA version
-BWA_VERSION="0.7.15"
+BWA_VERSION="0.7.17"
 
 # PICARD PUBLIC version
 PICARD_PUBLIC_VERSION="2.26.10"
