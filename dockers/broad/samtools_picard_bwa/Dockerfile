@@ -3,8 +3,9 @@ FROM us.gcr.io/broad-gotc-prod/samtools:1.0.0-1.11-1624651616
 ARG BWA_VERSION=0.7.15 \
         PICARD_PUBLIC_VERSION=2.26.10
 
+https://sourceforge.net/projects/bio-bwa/files/bwa-0.7.17.tar.bz2/download
 ENV TERM=xterm-256color \
-    BWA_URL=https://github.com/lh3/bwa/releases/download/v${BWA_VERSION}/bwakit-${BWA_VERSION}_x64-linux.tar.bz2 \
+    # BWA_URL=https://github.com/lh3/bwa/releases/download/v${BWA_VERSION}/bwakit-${BWA_VERSION}_x64-linux.tar.bz2 \
     PICARD_URL=https://github.com/broadinstitute/picard/releases/download/${PICARD_PUBLIC_VERSION}/picard.jar
 
 LABEL MAINTAINER="Broad Institute DSDE <dsde-engineering@broadinstitute.org>" \
@@ -20,17 +21,18 @@ RUN set -eux; \
             libc6-compat \
             openjdk8 \
     ; \
-# Install BWA
-    mkdir temp; \
-    cd temp; \
-    \
-    wget ${BWA_URL} -O bwakit-${BWA_VERSION}.tar.bz2; \
-    tar xf bwakit-${BWA_VERSION}.tar.bz2;  \
-    mv bwa.kit/bwa ../bwa; \
-    \
-    cd ../; \
-    rm -r temp \
-    ; \
+# Install BWA - use managed package instead of bwa-kit (no precompiled linux distro for 0.7.17)
+    apt-get install -y bwa=${BWA_VERSION}
+    # mkdir temp; \
+    # cd temp; \
+    # \
+    # wget ${BWA_URL} -O bwakit-${BWA_VERSION}.tar.bz2; \
+    # tar xf bwakit-${BWA_VERSION}.tar.bz2;  \
+    # mv bwa.kit/bwa ../bwa; \
+    # \
+    # cd ../; \
+    # rm -r temp \
+    # ; \
 # Install picard
     wget ${PICARD_URL};
 
