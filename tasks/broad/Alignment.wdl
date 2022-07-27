@@ -69,7 +69,7 @@ task PairedFastqsToBwaMem {
     bash_fastq2=~{read2}
     # if reference_fasta.ref_alt has data in it or allow_empty_ref_alt is set
     if [ -s ~{reference_fasta.ref_alt} ] || ~{allow_empty_ref_alt}; then
-      java -Xms1000m -Xmx1000m -jar /usr/gitc/picard.jar /usr/gitc/~{bwa_commandline} ~{output_bam_basename}.bam - 2> >(tee ~{output_bam_basename}.bwa.stderr.log >&2)
+      /usr/gitc/~{bwa_commandline} ~{output_bam_basename}.bam - 2> >(tee ~{output_bam_basename}.bwa.stderr.log >&2)
       
       if ~{!allow_empty_ref_alt}; then
         grep -m1 "read .* ALT contigs" ~{output_bam_basename}.bwa.stderr.log | \
