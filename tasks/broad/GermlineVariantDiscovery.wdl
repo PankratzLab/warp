@@ -134,7 +134,8 @@ task HaplotypeCaller_GATK4_VCF {
     t=$(echo $buffer*$available_memory_mb| bc|  awk '{print int($1+0.5)}')
     let java_memory_size_mb=available_memory_mb-t
 
-    java_memory_size_mb=$(echo "$java_memory_size_mb/~{hc_scatter}"| bc|  awk '{print int($1+0.5)}')
+    scatterCount=~{hc_scatter}
+    java_memory_size_mb=$(echo "$java_memory_size_mb/$scatterCount" | bc|  awk '{print int($1+0.5)}')
 
     echo Total available memory: ${available_memory_mb} MB >&2
     echo Memory reserved for each Java thread: ${java_memory_size_mb} MB >&2
