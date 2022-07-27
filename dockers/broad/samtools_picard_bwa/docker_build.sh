@@ -82,7 +82,9 @@ function main(){
     #  docker run us.gcr.io/broad-gotc-prod/samtools-picard-bwa:1.0.2-0.7.15-2.26.10-1643840748 /usr/gitc/bwa
     # docker run quay.io/jlanej/samtools_picard_bwa:1.0.2-0.7.17-2.26.10-1658879024 /usr/gitc/bwa
     # docker run quay.io/jlanej/samtools_picard_bwa:1.0.2-0.7.17-2.26.10-1658880621
-    docker run quay.io/jlanej/samtools_picard_bwa:1.0.2-0.7.17-2.26.10-1658881968 /usr/gitc/bwa
+    # docker run quay.io/jlanej/samtools_picard_bwa:1.0.2-0.7.17-2.26.10-1658881968 /usr/gitc/bwa
+    # docker run quay.io/jlanej/samtools_picard_bwa:1.0.2-0.7.17-2.26.10-1658882225 /usr/gitc/bwa
+
 }
 
 main "$@"
