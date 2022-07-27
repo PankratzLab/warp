@@ -29,8 +29,8 @@ RUN set -eux; \
     cp bwa ../bwa; \
     # \
     cd ../; \
-    ls -lat ;\
-    pwd ;\
+    # ls -lat ;\
+    # pwd ;\
     # rm -r temp \
     # ; \
 # Install picard
