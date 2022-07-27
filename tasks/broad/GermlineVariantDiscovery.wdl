@@ -134,11 +134,11 @@ task HaplotypeCaller_GATK4_VCF {
     t=$(echo $buffer*$available_memory_mb| bc|  awk '{print int($1+0.5)}')
     let java_memory_size_mb=available_memory_mb-t
 
-    java_memory_size_mb=$(echo "$java_memory_size_mb/~{hc_scatter}"| bc|  awk '{print int($1+0.5)}')
+    scatterCount=~{hc_scatter}
+    java_memory_size_mb=$(echo "$java_memory_size_mb/5" | bc|  awk '{print int($1+0.5)}')
 
     echo Total available memory: ${available_memory_mb} MB >&2
     echo Memory reserved for each Java thread: ${java_memory_size_mb} MB >&2
-    echo cromwell memory env vars: ${MEM_SIZE} ${MEM_UNIT} >&2
 
     gatk --java-options "-Xmx${java_memory_size_mb}m -Xms${java_memory_size_mb}m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
       HaplotypeCaller \
