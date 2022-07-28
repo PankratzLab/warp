@@ -34,8 +34,7 @@ workflow PairedFastqsToAlignedBam {
     Boolean allow_empty_ref_alt = false
   }
 
-  #String bwa_commandline = "bwa mem -K 100000000 -v 3 -M -R $bash_readgroup_format -t 16 -Y $bash_ref_fasta $bash_fastq1 $bash_fastq2"
-  String bwa_commandline = "bwa mem -v 3 -M -R $bash_readgroup_format -t 16 -Y $bash_ref_fasta $bash_fastq1 $bash_fastq2"
+  String bwa_commandline = "bwa mem -K 100000000 -v 3 -M -R $bash_readgroup_format -t 16 -Y $bash_ref_fasta $bash_fastq1 $bash_fastq2"
 
   Int compression_level = 2
 
