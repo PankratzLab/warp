@@ -18,7 +18,6 @@ import "../../../../../../tasks/broad/PairedFastqsToAlignedBam.wdl" as FastqsToB
 import "../../../../../../tasks/broad/AggregatedBamQC.wdl" as AggregatedQC
 import "../../../../../../tasks/broad/Qc.wdl" as QC
 import "../../../../../../tasks/broad/BamProcessing.wdl" as Processing
-import "../../../../../../tasks/broad/BamToCram.wdl" as ToCram
 import "../../../../../../pipelines/broad/dna_seq/germline/variant_calling/VariantCalling.wdl" as ToGvcf
 import "../../../../../../structs/dna_seq/DNASeqStructs.wdl"
 
@@ -90,18 +89,6 @@ workflow PankratzExomeGermlineSingleSample {
       fingerprint_genotypes_file = fingerprint_genotypes_file,
       fingerprint_genotypes_index = fingerprint_genotypes_index,
       papi_settings = papi_settings
-  }
-
-  call ToCram.BamToCram as BamToCram {
-    input:
-      input_bam = PairedFastqsToAlignedBam.output_bam,
-      ref_fasta = references.reference_fasta.ref_fasta,
-      ref_fasta_index = references.reference_fasta.ref_fasta_index,
-      ref_dict = references.reference_fasta.ref_dict,
-      duplication_metrics = PairedFastqsToAlignedBam.duplicate_metrics,
-      chimerism_metrics = AggregatedBamQC.agg_alignment_summary_metrics,
-      base_file_name = sample_and_paired_fastqs.base_file_name,
-      agg_preemptible_tries = papi_settings.agg_preemptible_tries
   }
 
   call ToGvcf.VariantCalling as BamToGvcf {
@@ -186,12 +173,6 @@ workflow PankratzExomeGermlineSingleSample {
 
     File? output_bam = provided_output_bam
     File? output_bam_index = provided_output_bam_index
-
-    File output_cram = BamToCram.output_cram
-    File output_cram_index = BamToCram.output_cram_index
-    File output_cram_md5 = BamToCram.output_cram_md5
-
-    File validate_cram_file_report = BamToCram.validate_cram_file_report
 
     File output_vcf = BamToGvcf.output_vcf
     File output_vcf_index = BamToGvcf.output_vcf_index
