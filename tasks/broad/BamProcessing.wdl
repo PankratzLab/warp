@@ -434,7 +434,7 @@ task CheckContamination {
     --UDPath ~{contamination_sites_ud} \
     --MeanPath ~{contamination_sites_mu} \
     --BedPath ~{contamination_sites_bed} \
-    ~{true="--DisableSanityCheck" false="" disable_sanity_check} \
+    ~{true="--DisableSanityCheck" false="" ~{disable_sanity_check}} \
     1>/dev/null
 
     # used to read from the selfSM file and calculate contamination, which gets printed out
