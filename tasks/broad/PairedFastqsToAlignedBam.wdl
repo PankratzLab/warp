@@ -154,7 +154,8 @@ workflow PairedFastqsToAlignedBam {
       ref_fasta_index = references.reference_fasta.ref_fasta_index,
       output_prefix = sample_and_paired_fastqs.base_file_name + ".preBqsr",
       preemptible_tries = papi_settings.agg_preemptible_tries,
-      contamination_underestimation_factor = 0.75
+      contamination_underestimation_factor = 0.75,
+      disable_sanity_check = true
   }
 
   # We need disk to localize the sharded input and output due to the scatter for BQSR.
