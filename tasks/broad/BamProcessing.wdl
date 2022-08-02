@@ -419,10 +419,10 @@ task CheckContamination {
   }
 
   Int disk_size = ceil(size(input_bam, "GiB") + size(ref_fasta, "GiB")) + 30
-
+  
   command <<<
     set -e
-
+    echo disable_sanity_check ${disable_sanity_check} >&2
     # creates a ~{output_prefix}.selfSM file, a TSV file with 2 rows, 19 columns.
     # First row are the keys (e.g., SEQ_SM, RG, FREEMIX), second row are the associated values
     /usr/gitc/VerifyBamID \
@@ -434,7 +434,7 @@ task CheckContamination {
     --UDPath ~{contamination_sites_ud} \
     --MeanPath ~{contamination_sites_mu} \
     --BedPath ~{contamination_sites_bed} \
-    ~{true="--DisableSanityCheck" false="" ~{disable_sanity_check}} \
+    ~{true="--DisableSanityCheck" false="" disable_sanity_check} \
     1>/dev/null
 
     # used to read from the selfSM file and calculate contamination, which gets printed out
