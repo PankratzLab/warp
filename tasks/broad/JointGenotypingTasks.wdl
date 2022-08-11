@@ -92,7 +92,7 @@ task ImportGVCFs {
   }
   
   parameter_meta {
-    interval_list: {
+    interval: {
       localization_optional: true
     }
   }
