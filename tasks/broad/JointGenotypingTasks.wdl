@@ -90,7 +90,13 @@ task ImportGVCFs {
 
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.2.6.1"
   }
-
+  
+  parameter_meta {
+    interval_list: {
+      localization_optional: true
+    }
+  }
+  
   command <<<
     set -euo pipefail
 
