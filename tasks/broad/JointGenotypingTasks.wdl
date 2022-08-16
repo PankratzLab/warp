@@ -110,7 +110,7 @@ task ImportGVCFs {
       --genomicsdb-workspace-path ~{workspace_dir_name} \
       --batch-size ~{batch_size} \
       -L ~{interval} \
-      --sample-name-map ~{sample_name_map} \
+      --arguments_file ~{sample_name_map} \
       --reader-threads 5 \
       --merge-input-intervals \
       --consolidate
