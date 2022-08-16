@@ -77,6 +77,7 @@ task SplitIntervalList {
 task ImportGVCFs {
 
   input {
+    File gvcf_paths
     File sample_name_map
     File interval
     File ref_fasta
@@ -110,7 +111,8 @@ task ImportGVCFs {
       --genomicsdb-workspace-path ~{workspace_dir_name} \
       --batch-size ~{batch_size} \
       -L ~{interval} \
-      --arguments_file ~{sample_name_map} \
+      --arguments_file ~{gvcf_paths} \
+      --sample_name_map ~{sample_name_map} \
       --reader-threads 5 \
       --merge-input-intervals \
       --consolidate
