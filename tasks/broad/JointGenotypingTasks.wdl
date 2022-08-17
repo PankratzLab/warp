@@ -112,7 +112,7 @@ task ImportGVCFs {
       --batch-size ~{batch_size} \
       -L ~{interval} \
       --arguments_file ~{sample_gvcf_paths} \
-      --sample_name_map ~{sample_name_map} \
+      --sample-name-map ~{sample_name_map} \
       --reader-threads 5 \
       --merge-input-intervals \
       --consolidate
