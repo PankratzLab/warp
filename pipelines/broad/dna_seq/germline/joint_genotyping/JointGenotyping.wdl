@@ -13,7 +13,7 @@ workflow JointGenotyping {
 
     String callset_name
     File sample_name_map
-    File input_gvcfs
+    Array[File] input_gvcfs
 
     File ref_fasta
     File ref_fasta_index
