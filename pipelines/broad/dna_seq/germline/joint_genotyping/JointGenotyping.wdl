@@ -14,6 +14,7 @@ workflow JointGenotyping {
     String callset_name
     File sample_name_map
     Array[File] input_gvcfs
+    Array[File] input_gvcf_tbis
 
     File ref_fasta
     File ref_fasta_index
@@ -112,6 +113,7 @@ workflow JointGenotyping {
     call Tasks.ImportGVCFs {
       input:
         input_gvcfs = input_gvcfs,
+        input_gvcf_tbis = input_gvcf_tbis,
         interval = unpadded_intervals[idx],
         ref_fasta = ref_fasta,
         ref_fasta_index = ref_fasta_index,
