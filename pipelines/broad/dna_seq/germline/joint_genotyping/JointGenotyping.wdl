@@ -13,6 +13,7 @@ workflow JointGenotyping {
 
     String callset_name
     File sample_name_map
+    Array[File] input_gvcfs
 
     File ref_fasta
     File ref_fasta_index
@@ -110,7 +111,7 @@ workflow JointGenotyping {
     # the Hellbender (GATK engine) team!
     call Tasks.ImportGVCFs {
       input:
-        sample_name_map = sample_name_map,
+        input_gvcfs = input_gvcfs,
         interval = unpadded_intervals[idx],
         ref_fasta = ref_fasta,
         ref_fasta_index = ref_fasta_index,
