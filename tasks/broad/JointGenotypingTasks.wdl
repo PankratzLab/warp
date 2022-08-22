@@ -114,8 +114,8 @@ task ImportGVCFs {
       -V ~{sep=' ' input_gvcfs} \
       --read-index ~{sep=' ' input_gvcf_tbis} \
       --reader-threads 5 \
-      --merge-input-intervals \
-      --consolidate
+      --merge-input-intervals true\
+      --consolidate false
 
     tar -cf ~{workspace_dir_name}.tar ~{workspace_dir_name}
   >>>
