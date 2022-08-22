@@ -111,7 +111,7 @@ task ImportGVCFs {
       --genomicsdb-workspace-path ~{workspace_dir_name} \
       --batch-size ~{batch_size} \
       -L ~{interval} \
-      -V ~{sep=" -V " input_gvcfs} \
+      -V ~{sep=' ' input_gvcfs} \
       --read-index ~{sep=' ' input_gvcf_tbis} \
       --reader-threads 5 \
       --merge-input-intervals \
