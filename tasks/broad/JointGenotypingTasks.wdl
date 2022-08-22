@@ -78,6 +78,7 @@ task ImportGVCFs {
 
   input {
     Array[File] input_gvcfs
+    Array[File] input_gvcf_tbis
     File interval
     File ref_fasta
     File ref_fasta_index
@@ -111,6 +112,7 @@ task ImportGVCFs {
       --batch-size ~{batch_size} \
       -L ~{interval} \
       -V ~{sep=" -V " input_gvcfs} \
+      --read-index ~{input_gvcf_tbis} \
       --reader-threads 5 \
       --merge-input-intervals \
       --consolidate
