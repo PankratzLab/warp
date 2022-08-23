@@ -106,6 +106,9 @@ task ImportGVCFs {
     # a significant amount of non-heap memory for native libraries.
     # Also, testing has shown that the multithreaded reader initialization
     # does not scale well beyond 5 threads, so don't increase beyond that.
+    # If there are multiple capture targets (intervals), as in the case of
+    # exome sequencing, GenomicsDBImport cannot use multiple VCF reader
+    # threads. The value of --reader-threads should be conditional, not hard-coded.
     gatk --java-options "-Xms8000m -Xmx25000m -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" \
       GenomicsDBImport \
       --genomicsdb-workspace-path ~{workspace_dir_name} \
@@ -113,7 +116,7 @@ task ImportGVCFs {
       -L ~{interval} \
       -V ~{sep=" -V " input_gvcfs} \
       --read-index ~{sep=" --read-index " input_gvcf_tbis} \
-      --reader-threads 5 \
+      --reader-threads 1 \
       --merge-input-intervals true\
       --consolidate false
 
