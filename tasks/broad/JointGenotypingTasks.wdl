@@ -150,6 +150,7 @@ task GenotypeGVCFs {
     File ref_dict
 
     File dbsnp_vcf
+    File dbsnp_vcf_index
 
     Boolean keep_combined_raw_annotations = false
     String? additional_annotation
