@@ -115,7 +115,6 @@ task ImportGVCFs {
       --batch-size ~{batch_size} \
       -L ~{interval} \
       -V ~{sep=" -V " input_gvcfs} \
-      --read-index ~{sep=" --read-index " input_gvcf_tbis} \
       --reader-threads 1 \
       --merge-input-intervals true\
       --consolidate false
