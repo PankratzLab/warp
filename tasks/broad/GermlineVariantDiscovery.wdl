@@ -92,7 +92,7 @@ task HaplotypeCaller_GATK4_VCF {
     Boolean make_bamout
     Int preemptible_tries
     Int hc_scatter
-    Boolean? dont-use-soft-clipped-bases = false
+    Boolean dont-use-soft-clipped-bases = false
     Boolean run_dragen_mode_variant_calling = false
     Boolean use_dragen_hard_filtering = false
     Boolean use_spanning_event_genotyping = true
