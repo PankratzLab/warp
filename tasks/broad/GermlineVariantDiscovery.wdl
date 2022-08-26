@@ -92,6 +92,7 @@ task HaplotypeCaller_GATK4_VCF {
     Boolean make_bamout
     Int preemptible_tries
     Int hc_scatter
+    Boolean dont-use-soft-clipped-bases = false
     Boolean run_dragen_mode_variant_calling = false
     Boolean use_dragen_hard_filtering = false
     Boolean use_spanning_event_genotyping = true
@@ -139,6 +140,7 @@ task HaplotypeCaller_GATK4_VCF {
 
     echo Total available memory: ${available_memory_mb} MB >&2
     echo Memory reserved for each Java thread: ${java_memory_size_mb} MB >&2
+    echo dont-use-soft-clipped-bases: {dont-use-soft-clipped-bases} >&2
 
     gatk --java-options "-Xmx${java_memory_size_mb}m -Xms${java_memory_size_mb}m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
       HaplotypeCaller \
@@ -148,6 +150,7 @@ task HaplotypeCaller_GATK4_VCF {
       -O ~{output_file_name} \
       -contamination ~{default=0 contamination} \
       -G StandardAnnotation -G StandardHCAnnotation ~{true="-G AS_StandardAnnotation" false="" make_gvcf} \
+      ~{true="--dont-use-soft-clipped-bases" false="" dont-use-soft-clipped-bases} \
       ~{true="--dragen-mode" false="" run_dragen_mode_variant_calling} \
       ~{false="--disable-spanning-event-genotyping" true="" use_spanning_event_genotyping} \
       ~{if defined(dragstr_model) then "--dragstr-params-path " + dragstr_model else ""} \
