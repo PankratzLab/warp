@@ -41,6 +41,7 @@ workflow PankratzExomeGermlineSingleSample {
     String bait_set_name
 
     Boolean provide_bam_output = false
+    Boolean dont_use_soft_clipped_bases = false
   }
 
   # Not overridable:
@@ -107,6 +108,7 @@ workflow PankratzExomeGermlineSingleSample {
       dbsnp_vcf_index = references.dbsnp_vcf_index,
       base_file_name = sample_and_paired_fastqs.base_file_name,
       final_vcf_base_name = final_gvcf_base_name,
+      dont_use_soft_clipped_bases = dont_use_soft_clipped_bases,
       agg_preemptible_tries = papi_settings.agg_preemptible_tries
   }
 
