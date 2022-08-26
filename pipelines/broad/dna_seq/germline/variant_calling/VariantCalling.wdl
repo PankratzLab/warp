@@ -14,6 +14,7 @@ workflow VariantCalling {
 
   input {
     Boolean run_dragen_mode_variant_calling = false
+    Boolean dont_use_soft_clipped_bases = false
     Boolean use_spanning_event_genotyping = true
     File calling_interval_list
     File evaluation_interval_list
@@ -105,6 +106,7 @@ workflow VariantCalling {
           hc_scatter = hc_divisor,
           make_gvcf = make_gvcf,
           make_bamout = make_bamout,
+          dont_use_soft_clipped_bases = dont_use_soft_clipped_bases,
           run_dragen_mode_variant_calling = run_dragen_mode_variant_calling,
           use_dragen_hard_filtering = use_dragen_hard_filtering,
           use_spanning_event_genotyping = use_spanning_event_genotyping,
