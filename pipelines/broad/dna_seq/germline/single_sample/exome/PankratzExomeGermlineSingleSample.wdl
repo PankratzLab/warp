@@ -41,7 +41,6 @@ workflow PankratzExomeGermlineSingleSample {
     String bait_set_name
 
     Boolean provide_bam_output = false
-    Boolean? dont-use-soft-clipped-bases
   }
 
   # Not overridable:
@@ -108,8 +107,7 @@ workflow PankratzExomeGermlineSingleSample {
       dbsnp_vcf_index = references.dbsnp_vcf_index,
       base_file_name = sample_and_paired_fastqs.base_file_name,
       final_vcf_base_name = final_gvcf_base_name,
-      agg_preemptible_tries = papi_settings.agg_preemptible_tries,
-      dont-use-soft-clipped-bases = dont-use-soft-clipped-bases
+      agg_preemptible_tries = papi_settings.agg_preemptible_tries
   }
 
   call QC.CollectHsMetrics as CollectHsMetrics {
