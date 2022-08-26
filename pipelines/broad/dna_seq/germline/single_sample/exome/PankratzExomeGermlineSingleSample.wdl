@@ -41,7 +41,7 @@ workflow PankratzExomeGermlineSingleSample {
     String bait_set_name
 
     Boolean provide_bam_output = false
-    Boolean? dont-use-soft-clipped-bases = false
+    Boolean? dont-use-soft-clipped-bases
   }
 
   # Not overridable:
