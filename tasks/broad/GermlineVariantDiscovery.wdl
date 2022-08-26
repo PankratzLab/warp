@@ -92,7 +92,7 @@ task HaplotypeCaller_GATK4_VCF {
     Boolean make_bamout
     Int preemptible_tries
     Int hc_scatter
-    Boolean dont-use-soft-clipped-bases = false
+    Boolean dont_use_soft_clipped_bases = false
     Boolean run_dragen_mode_variant_calling = false
     Boolean use_dragen_hard_filtering = false
     Boolean use_spanning_event_genotyping = true
@@ -150,7 +150,7 @@ task HaplotypeCaller_GATK4_VCF {
       -O ~{output_file_name} \
       -contamination ~{default=0 contamination} \
       -G StandardAnnotation -G StandardHCAnnotation ~{true="-G AS_StandardAnnotation" false="" make_gvcf} \
-      ~{true="--dont-use-soft-clipped-bases" false="" dont-use-soft-clipped-bases} \
+      ~{true="--dont-use-soft-clipped-bases" false="" dont_use_soft_clipped_bases} \
       ~{true="--dragen-mode" false="" run_dragen_mode_variant_calling} \
       ~{false="--disable-spanning-event-genotyping" true="" use_spanning_event_genotyping} \
       ~{if defined(dragstr_model) then "--dragstr-params-path " + dragstr_model else ""} \
