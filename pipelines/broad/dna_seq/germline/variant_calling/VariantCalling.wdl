@@ -36,6 +36,7 @@ workflow VariantCalling {
     Boolean use_gatk3_haplotype_caller = false
     Boolean skip_reblocking = false
     Boolean use_dragen_hard_filtering = false
+    Boolean? dont-use-soft-clipped-bases = false
   }
 
   parameter_meta {
@@ -105,6 +106,7 @@ workflow VariantCalling {
           hc_scatter = hc_divisor,
           make_gvcf = make_gvcf,
           make_bamout = make_bamout,
+          dont-use-soft-clipped-bases = dont-use-soft-clipped-bases,
           run_dragen_mode_variant_calling = run_dragen_mode_variant_calling,
           use_dragen_hard_filtering = use_dragen_hard_filtering,
           use_spanning_event_genotyping = use_spanning_event_genotyping,
