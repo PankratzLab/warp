@@ -11,6 +11,8 @@ struct SampleAndUnmappedBams {
 struct PairedFastqs {
   File read1
   File read2
+  String readgroup_format
+  String flowcell_bam_basename
 }
 
 struct SampleAndPairedFastqs {
