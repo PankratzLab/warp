@@ -45,15 +45,16 @@ workflow PairedFastqsToAlignedBam {
 
     File read1 = paired_fastqs.read1
     File read2 = paired_fastqs.read2
+    String readgroup_format = paired_fastqs.readgroup_format
     Float paired_size = size(read1, "GiB") + size(read2, "GiB")
 
-    String paired_fastqs_basename = basename(read1, sample_and_paired_fastqs.paired_fastqs_suffix)
+    String paired_fastqs_basename = paired_fastqs.flowcell_bam_basename
 
     call Alignment.PairedFastqsToBwaMem as PairedFastqsToBwaMem {
           input:
             read1 = read1,
             read2 = read2,
-            readgroup_format = sample_and_paired_fastqs.readgroup_format,
+            readgroup_format = readgroup_format,
             bwa_commandline = bwa_commandline,
             output_bam_basename = paired_fastqs_basename + ".aligned.unsorted",
             reference_fasta = references.reference_fasta,
