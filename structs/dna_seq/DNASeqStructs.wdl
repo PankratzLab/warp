@@ -21,7 +21,6 @@ struct SampleAndPairedFastqs {
   Array[PairedFastqs] flowcell_paired_fastqs
   String sample_name
   String paired_fastqs_suffix
-  String readgroup_format
 }
 
 struct ReferenceFasta {
