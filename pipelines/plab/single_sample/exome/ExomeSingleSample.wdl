@@ -14,15 +14,15 @@ version 1.0
 ## - GVCF output names must end in ".g.vcf.gz"
 ## - Reference genome must be Hg38 with ALT contigs
 
-import "../../../../../../tasks/broad/PairedFastqsToAlignedBam.wdl" as FastqsToBam
-import "../../../../../../tasks/broad/AggregatedBamQC.wdl" as AggregatedQC
-import "../../../../../../tasks/broad/Qc.wdl" as QC
-import "../../../../../../tasks/broad/BamProcessing.wdl" as Processing
-import "../../../../../../pipelines/broad/dna_seq/germline/variant_calling/VariantCalling.wdl" as ToGvcf
-import "../../../../../../structs/dna_seq/DNASeqStructs.wdl"
+import "../../../../tasks/plab/PairedFastqsToAlignedBam.wdl" as FastqsToBam
+import "../../../../tasks/broad/AggregatedBamQC.wdl" as AggregatedQC
+import "../../../../tasks/broad/Qc.wdl" as QC
+import "../../../../tasks/broad/BamProcessing.wdl" as Processing
+import "../../../../pipelines/broad/dna_seq/germline/variant_calling/VariantCalling.wdl" as ToGvcf
+import "../../../../structs/dna_seq/DNASeqStructs.wdl"
 
 # WORKFLOW DEFINITION
-workflow PankratzExomeGermlineSingleSample {
+workflow ExomeSingleSample {
 
   String pipeline_version = "3.1.5"
 
