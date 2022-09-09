@@ -40,7 +40,7 @@ workflow ExomeSingleSample {
     File bait_interval_list
     String bait_set_name
 
-    Boolean provide_bam_output = false
+    Boolean provide_bam_output = true
     Boolean dont_use_soft_clipped_bases = false
   }
 
