@@ -53,7 +53,7 @@ workflow AnnotationFiltration {
         ref_fasta_index = ref_fasta_index,
         ref_dict = ref_dict,
         interval_list = funcotator_interval_list,
-        use_gnomad_exome = false,
+        use_gnomad_exome = true,
         use_gnomad_genome = false,
 
         gatk_override = gatk_override,
