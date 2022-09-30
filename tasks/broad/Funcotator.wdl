@@ -47,7 +47,7 @@ workflow Funcotator {
     Array[String]? transcript_selection_list
     Array[String]? annotation_defaults
     Array[String]? annotation_overrides
-    File? gatk4_jar_override
+    File? gatk4_override
 
     String? funcotator_extra_args
   }
