@@ -17,6 +17,7 @@ workflow AnnotationFiltration {
 
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.2.6.1"
     File? custom_data_source_tar_gz
+    File? gatk4_jar_override
   }
 
   parameter_meta {
