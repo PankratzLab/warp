@@ -56,6 +56,8 @@ workflow AnnotationFiltration {
         use_gnomad_exome = false,
         use_gnomad_genome = false,
 
+        gatk4_jar_override = gatk4_jar_override,
+
         gatk_docker = gatk_docker,
         memory_mb = 4000
     }
