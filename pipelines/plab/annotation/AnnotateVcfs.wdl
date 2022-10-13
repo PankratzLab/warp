@@ -32,7 +32,7 @@ workflow AnnotateVcfs {
     	ref_fasta = ref_fasta
     }
 
-    call Annotate.VEP {
+    call Annotate.VariantEffectPredictor {
 
     }
   }
