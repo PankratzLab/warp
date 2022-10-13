@@ -14,7 +14,7 @@ task SplitMultiallelics {
 
   # Reference the index even though it isn't passed to gatk so cromwell will see it.
   File input_vcf_index = vcf_unit.input_vcf_index
-  String output_base_name = vcf_unit.output_base_name
+  String output_base_name = vcf_unit.output_vcf_base_name
 
   command {
     gatk --java-options "-Xms3000m -Xmx3250m -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" \
