@@ -49,7 +49,8 @@ task VariantEffectPredictor {
 
   command {
     vep \
-      --cache
+      --cache \
+      --merged \
       --fasta ~{ref_fasta} \
       --vcf \
       --compress_output bgzip \
