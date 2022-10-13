@@ -2,7 +2,7 @@ version 1.0
 
 ## Tasks for VCF annotation.
 
-import "../../../../structs/plab/AnnotationStructs.wdl"
+import "../../structs/plab/AnnotationStructs.wdl"
 
 task SplitMultiallelics {
   input {

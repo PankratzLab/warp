@@ -11,8 +11,8 @@ version 1.0
 ## - Reference genome (Hg38 with ALT contigs)
 
 
-import "../../../../tasks/plab/AnnotationTasks.wdl" as Annotate
-import "../../../../structs/plab/AnnotationStructs.wdl"
+import "../../../tasks/plab/AnnotationTasks.wdl" as Annotate
+import "../../../structs/plab/AnnotationStructs.wdl"
 
 # WORKFLOW DEFINITION
 workflow AnnotateVcfs {
