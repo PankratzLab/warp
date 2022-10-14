@@ -60,7 +60,31 @@ task VariantEffectPredictor {
       --cache \
       --dir_cache ~{vep_cache_dir} \
       --merged \
-      --everything \
+      --sift b \ 
+      --polyphen b \
+      --ccds \
+      --hgvs \
+      --symbol \
+      --numbers \
+      --domains 
+      --regulatory \
+      --canonical \
+      --protein \
+      --af \
+      --af_1kg \
+      --af_esp \
+      --af_gnomade \
+      --af_gnomadg \
+      --max_af \
+      --pubmed \
+      --uniprot \
+      --mane \
+      --tsl \
+      --appris \
+      --variant_clas\ 
+      --gene_phenotype \
+      --mirna \
+      --most_severe \
       --fasta ~{ref_fasta} \
       --vcf \
       --compress_output bgzip \
