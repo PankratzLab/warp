@@ -23,6 +23,7 @@ workflow AnnotateVcfs {
     Array[VcfAndIndex] vcf_units
     File ref_fasta
     File ref_fasta_index
+    File ref_dict
   }
 
   scatter ( unit in vcf_units ) {
@@ -30,7 +31,8 @@ workflow AnnotateVcfs {
       input:
 	vcf_unit = unit,
     	ref_fasta = ref_fasta,
-	ref_fasta_index = ref_fasta_index
+	ref_fasta_index = ref_fasta_index,
+	ref_dict = ref_dict
     }
 
     call Annotate.VariantEffectPredictor {

@@ -9,13 +9,15 @@ task SplitMultiallelics {
     VcfAndIndex vcf_unit
     File ref_fasta
     File ref_fasta_index
+    File ref_dict
 
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.2.6.1"
   }
 
-  # Reference the index files even though they aren't passed as arguments to gatk so cromwell will see them.
+  # Reference the index and dict files even though they aren't passed as arguments to gatk so cromwell will see them.
   File input_vcf_index = vcf_unit.input_vcf_index
   File fasta_index = ref_fasta_index
+  File reference_dict = ref_dict
   String output_base_name = vcf_unit.output_base_name
 
   command {
