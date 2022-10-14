@@ -19,17 +19,18 @@ workflow AnnotateVcfs {
 
   String pipeline_version = "1.0.0"
 
-
   input {
     Array[VcfAndIndex] vcf_units
     File ref_fasta
+    File ref_fasta_index
   }
 
   scatter ( unit in vcf_units ) {
     call Annotate.SplitMultiallelics {
       input:
 	vcf_unit = unit,
-    	ref_fasta = ref_fasta
+    	ref_fasta = ref_fasta,
+	ref_fasta_index = ref_fasta_index
     }
 
     call Annotate.VariantEffectPredictor {
@@ -37,7 +38,8 @@ workflow AnnotateVcfs {
 	input_vcf = SplitMultiallelics.output_vcf,
 	input_vcf_index = SplitMultiallelics.output_vcf_index,
 	output_base_name = unit.output_base_name,
-    	ref_fasta = ref_fasta
+    	ref_fasta = ref_fasta,
+	ref_fasta_index = ref_fasta_index
     }
   }
 
