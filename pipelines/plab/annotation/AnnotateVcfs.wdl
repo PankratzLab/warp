@@ -34,8 +34,8 @@ workflow AnnotateVcfs {
 
     call Annotate.VariantEffectPredictor {
       input:
-	split_vcf = SplitMultiallelics.output_vcf,
-	split_vcf_index = SplitMultiallelics.output_vcf_index,
+	input_vcf = SplitMultiallelics.output_vcf,
+	input_vcf_index = SplitMultiallelics.output_vcf_index,
 	output_base_name = unit.output_base_name,
     	ref_fasta = ref_fasta
     }
