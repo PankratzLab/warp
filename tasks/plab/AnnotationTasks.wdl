@@ -51,6 +51,9 @@ task VariantEffectPredictor {
     vep \
       --cache \
       --merged \
+      --everything \
+      --most_severe \
+      --regulatory \
       --fasta ~{ref_fasta} \
       --vcf \
       --compress_output bgzip \
