@@ -37,15 +37,16 @@ task SplitMultiallelics {
 
 task VariantEffectPredictor {
   input {
-    VcfAndIndex vcf_unit
+	  File input_vcf
+	  File input_vcf_index
+	  String output_base_name
     File ref_fasta
 
     String vep_docker = "docker pull ensemblorg/ensembl-vep"
   }
 
   # Reference the index even though it isn't passed to gatk so cromwell will see it.
-  File input_vcf_index = vcf_unit.input_vcf_index
-  String output_base_name = vcf_unit.output_vcf_base_name
+  #File input_vcf_index = split_vcf_index
 
   command {
     vep \
