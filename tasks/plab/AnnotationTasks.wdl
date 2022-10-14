@@ -9,7 +9,7 @@ task SplitMultiallelics {
     VcfAndIndex vcf_unit
     File ref_fasta
 
-    String docker = "us.gcr.io/broad-gatk/gatk:4.2.6.1"
+    String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.2.6.1"
   }
 
   # Reference the index even though it isn't passed to gatk so cromwell will see it.
@@ -26,7 +26,7 @@ task SplitMultiallelics {
   }
 
   runtime {
-    docker: docker
+    docker: gatk_docker
   }
 
   output {
@@ -40,7 +40,7 @@ task VariantEffectPredictor {
     VcfAndIndex vcf_unit
     File ref_fasta
 
-    String docker = "docker pull ensemblorg/ensembl-vep"
+    String vep_docker = "docker pull ensemblorg/ensembl-vep"
   }
 
   # Reference the index even though it isn't passed to gatk so cromwell will see it.
