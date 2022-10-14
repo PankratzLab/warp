@@ -8,12 +8,14 @@ task SplitMultiallelics {
   input {
     VcfAndIndex vcf_unit
     File ref_fasta
+    File ref_fasta_index
 
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.2.6.1"
   }
 
-  # Reference the index even though it isn't passed to gatk so cromwell will see it.
+  # Reference the index files even though they aren't passed as arguments to gatk so cromwell will see them.
   File input_vcf_index = vcf_unit.input_vcf_index
+  File fasta_index = ref_fasta_index
   String output_base_name = vcf_unit.output_base_name
 
   command {
@@ -37,16 +39,18 @@ task SplitMultiallelics {
 
 task VariantEffectPredictor {
   input {
-	  File input_vcf
-	  File input_vcf_index
-	  String output_base_name
+    File input_vcf
+    File input_vcf_index
+    String output_base_name
     File ref_fasta
+    File ref_fasta_index
 
     String vep_docker = "docker pull ensemblorg/ensembl-vep"
   }
 
-  # Reference the index even though it isn't passed to gatk so cromwell will see it.
-  #File input_vcf_index = split_vcf_index
+  # Reference the index files even though they aren't passed as arguments to vep so cromwell will see them.
+  File vcf_index = input_vcf_index
+  File fasta_index = ref_fasta_index
 
   command {
     vep \
