@@ -46,6 +46,7 @@ task VariantEffectPredictor {
     String output_base_name
     File ref_fasta
     File ref_fasta_index
+    String vep_cache_dir
 
     String vep_docker = "ensemblorg/ensembl-vep"
   }
@@ -57,6 +58,7 @@ task VariantEffectPredictor {
   command {
     vep \
       --cache \
+      --dir_cache ~{vep_cache_dir} \
       --merged \
       --everything \
       --fasta ~{ref_fasta} \
