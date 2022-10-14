@@ -58,7 +58,7 @@ task VariantEffectPredictor {
       --fasta ~{ref_fasta} \
       --vcf \
       --compress_output bgzip \
-      -i ~{vcf_unit.input_vcf} \
+      -i ~{input_vcf} \
       -o "~{output_base_name}.vep.vcf.gz" \
       --force_overwrite
   }
