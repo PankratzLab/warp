@@ -27,7 +27,7 @@ workflow AnnotateVcfs {
     File ref_fasta_index
     File ref_dict
     Int max_indel_length = 200
-    String vep_cache_dir
+    File vep_cache_dir
   }
 
   scatter ( unit in vcf_units ) {
