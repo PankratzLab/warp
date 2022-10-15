@@ -83,7 +83,7 @@ task VariantEffectPredictor {
       --mane \
       --tsl \
       --appris \
-      --variant_clas\ 
+      --variant_class \ 
       --gene_phenotype \
       --mirna \
       --most_severe \
