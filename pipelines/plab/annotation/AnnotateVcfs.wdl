@@ -9,6 +9,8 @@ version 1.0
 ## Requirements/expectations :
 ## - One or more vcfs produced by GATK4 JointGenotyping
 ## - Reference genome (Hg38 with ALT contigs)
+## - Optionally, the default maximum indel length can be overridden in the input JSON.
+## - Path to the VEP reference genome cache
 
 
 import "../../../tasks/plab/AnnotationTasks.wdl" as Annotate
@@ -24,7 +26,8 @@ workflow AnnotateVcfs {
     File ref_fasta
     File ref_fasta_index
     File ref_dict
-    String vep_cache_dir
+    Int max_indel_length = 200
+    File vep_cache_dir
   }
 
   scatter ( unit in vcf_units ) {
@@ -33,7 +36,8 @@ workflow AnnotateVcfs {
 	vcf_unit = unit,
     	ref_fasta = ref_fasta,
 	ref_fasta_index = ref_fasta_index,
-	ref_dict = ref_dict
+	ref_dict = ref_dict,
+	max_indel_length = max_indel_length
     }
 
     call Annotate.VariantEffectPredictor {

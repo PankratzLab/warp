@@ -10,6 +10,7 @@ task SplitMultiallelics {
     File ref_fasta
     File ref_fasta_index
     File ref_dict
+    Int max_indel_length
 
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.2.6.1"
   }
@@ -26,7 +27,8 @@ task SplitMultiallelics {
       -R ~{ref_fasta} \
       -V ~{vcf_unit.input_vcf} \
       -O "~{output_base_name}.vcf.gz" \
-      --split-multi-allelics
+      --split-multi-allelics \
+      --max-indel-length ~{max_indel_length}
   }
 
   runtime {
@@ -46,7 +48,7 @@ task VariantEffectPredictor {
     String output_base_name
     File ref_fasta
     File ref_fasta_index
-    String vep_cache_dir
+    File vep_cache_dir
 
     String vep_docker = "ensemblorg/ensembl-vep"
   }
