@@ -24,6 +24,7 @@ workflow AnnotateVcfs {
     File ref_fasta
     File ref_fasta_index
     File ref_dict
+    String vep_cache_dir
   }
 
   scatter ( unit in vcf_units ) {
@@ -41,7 +42,8 @@ workflow AnnotateVcfs {
 	input_vcf_index = SplitMultiallelics.output_vcf_index,
 	output_base_name = unit.output_base_name,
     	ref_fasta = ref_fasta,
-	ref_fasta_index = ref_fasta_index
+	ref_fasta_index = ref_fasta_index,
+	vep_cache_dir = vep_cache_dir
     }
   }
 
