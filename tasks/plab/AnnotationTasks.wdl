@@ -57,6 +57,13 @@ task VariantEffectPredictor {
   File vcf_index = input_vcf_index
   File fasta_index = ref_fasta_index
 
+  parameter_meta {
+    vep_cache_dir: {
+      description: "VEP reference genome cache",
+      localization_optional: true
+    }
+  }
+
   command {
     vep \
       --cache \
