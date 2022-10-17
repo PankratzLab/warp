@@ -84,6 +84,6 @@ task VariantEffectPredictor {
 
   output {
     File output_vcf = "~{output_base_name}.vep.vcf.gz"
-    File output_vcf_index = "~{output_base_name}.vep.vcf.gz.tbi"
+    File output_vcf_index = "~{output_base_name}.vep.vcf.gz_summary.html"
   }
 }
