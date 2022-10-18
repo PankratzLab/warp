@@ -56,6 +56,7 @@ task VariantEffectPredictor {
   # Reference the index files even though they aren't passed as arguments to vep so cromwell will see them.
   File vcf_index = input_vcf_index
   File fasta_index = ref_fasta_index
+  String pick_string = "rank"
 
   parameter_meta {
     vep_cache_dir: {
@@ -70,6 +71,8 @@ task VariantEffectPredictor {
       --dir_cache ~{vep_cache_dir} \
       --merged \
       --everything \
+      --flag_pick \
+      --pick_order ~{pick_string} \
       --fasta ~{ref_fasta} \
       --vcf \
       --compress_output bgzip \
