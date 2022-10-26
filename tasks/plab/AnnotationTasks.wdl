@@ -50,7 +50,7 @@ task VariantEffectPredictor {
     File ref_fasta_index
     File vep_cache_dir
 
-    String vep_docker = "ensemblorg/ensembl-vep"
+    String vep_docker = "ensemblorg/ensembl-vep:release_107.0"
   }
 
   # Reference the index files even though they aren't passed as arguments to vep so cromwell will see them.
