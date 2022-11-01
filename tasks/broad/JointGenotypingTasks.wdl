@@ -109,7 +109,7 @@ task ImportGVCFs {
     # If there are multiple capture targets (intervals), as in the case of
     # exome sequencing, GenomicsDBImport cannot use multiple VCF reader
     # threads. The value of --reader-threads should be conditional, not hard-coded.
-    gatk --java-options "-Xms8000m -Xmx25000m -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" \
+    gatk --java-options "-Xms8000m -Xmx500000m -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" \
       GenomicsDBImport \
       --genomicsdb-workspace-path ~{workspace_dir_name} \
       --batch-size ~{batch_size} \
