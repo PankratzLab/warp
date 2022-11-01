@@ -85,6 +85,7 @@ task ImportGVCFs {
     File ref_dict
 
     String workspace_dir_name
+    File tmp_dir
 
     Int disk_size
     Int batch_size
@@ -117,6 +118,7 @@ task ImportGVCFs {
       -V ~{sep=" -V " input_gvcfs} \
       --reader-threads 1 \
       --merge-input-intervals true\
+      --tmp-dir  ~{tmp_dir} \
       --consolidate false
 
     tar -cf ~{workspace_dir_name}.tar ~{workspace_dir_name}
