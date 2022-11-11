@@ -23,6 +23,8 @@ workflow JointGenotyping {
     File dbsnp_vcf
     File dbsnp_vcf_index
 
+    File genomics_db_tmp_dir
+    
     Int small_disk
     Int medium_disk
     Int large_disk
@@ -119,6 +121,7 @@ workflow JointGenotyping {
         ref_fasta_index = ref_fasta_index,
         ref_dict = ref_dict,
         workspace_dir_name = "genomicsdb",
+        tmp_dir = genomics_db_tmp_dir,
         disk_size = medium_disk,
         batch_size = 50
     }
