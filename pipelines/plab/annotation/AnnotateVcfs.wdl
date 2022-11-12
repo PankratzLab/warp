@@ -28,6 +28,8 @@ workflow AnnotateVcfs {
     File ref_dict
     Int max_indel_length = 200
     File vep_cache_dir
+    File? topmed
+    File? topmed_index
   }
 
   scatter ( unit in vcf_units ) {
@@ -47,7 +49,9 @@ workflow AnnotateVcfs {
 	output_base_name = unit.output_base_name,
     	ref_fasta = ref_fasta,
 	ref_fasta_index = ref_fasta_index,
-	vep_cache_dir = vep_cache_dir
+	vep_cache_dir = vep_cache_dir,
+	topmed = topmed,
+	topmed_index = topmed_index
     }
   }
 
