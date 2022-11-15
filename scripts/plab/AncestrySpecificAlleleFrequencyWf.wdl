@@ -87,7 +87,7 @@ task CalculateAncestrySpecificTagsForRegion {
   File bcf_index = input_bcf_index
    
   command {
-    bcftools view -r ~{region} ~{input_bcf} -Ou | bcftools +fill-tags -Oz -o "~{output_file_name}" -- -S ~{ancestries} -t ~{info_tags} 
+    bcftools view -r ~{region} ~{input_bcf} -Ou | bcftools +fill-tags -Ou -- -S ~{ancestries} -t ~{info_tags} | bcftools view -G -Ov -o "~{output_file_name}"
   }
 
   runtime {
