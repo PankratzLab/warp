@@ -49,6 +49,8 @@ task VariantEffectPredictor {
     File ref_fasta
     File ref_fasta_index
     File vep_cache_dir
+    File? topmed
+    File? topmed_index
 
     String vep_docker = "ensemblorg/ensembl-vep:release_107.0"
   }
@@ -56,6 +58,9 @@ task VariantEffectPredictor {
   # Reference the index files even though they aren't passed as arguments to vep so cromwell will see them.
   File vcf_index = input_vcf_index
   File fasta_index = ref_fasta_index
+  Boolean topmed_annotations = defined(topmed)
+  File topmed_index = if topmed_annotations then topmed_index else None
+  String topmed_name = if topmed_annotations then basename(topmed, ".vcf.gz") else None
   String pick_string = "rank"
 
   parameter_meta {
@@ -64,7 +69,7 @@ task VariantEffectPredictor {
       localization_optional: true
     }
   }
-
+  
   command {
     vep \
       --cache \
@@ -78,6 +83,7 @@ task VariantEffectPredictor {
       --compress_output bgzip \
       -i ~{input_vcf} \
       -o "~{output_base_name}.vep.vcf.gz" \
+      ~{true='--custom  ~{topmed},~{topmed_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF', false="" topmed_annotations} \
       --force_overwrite
   }
 
