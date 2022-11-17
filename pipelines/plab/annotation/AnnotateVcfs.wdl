@@ -31,6 +31,7 @@ workflow AnnotateVcfs {
     File ref_dict
     Int max_indel_length = 200
     String vep_pick_string = "rank"
+    String vep_outout_format = "vcf"
     String? vep_fields
     File vep_cache_dir
     File? topmed_vcf
@@ -56,6 +57,7 @@ workflow AnnotateVcfs {
     	ref_fasta = ref_fasta,
 	ref_fasta_index = ref_fasta_index,
 	vep_pick_string = vep_pick_string,
+	vep_output_format = vep_output_format,
 	vep_fields,
 	vep_cache_dir = vep_cache_dir,
 	topmed = topmed_vcf,
