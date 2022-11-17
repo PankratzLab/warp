@@ -10,7 +10,10 @@ version 1.0
 ## - One or more vcfs produced by GATK4 JointGenotyping
 ## - Reference genome (Hg38 with ALT contigs)
 ## - Optionally, the default maximum indel length can be overridden in the input JSON.
+## - Optionally, the default pick string ("rank) can be overridden in the input JSON.
 ## - Path to the VEP reference genome cache
+## - Optional custom TOPmed database resource (vcf + index)
+## - Short name for TOPmed annotations in the vcf, recommended = "TOPMED_<release_date>"
 
 
 import "../../../tasks/plab/AnnotationTasks.wdl" as Annotate
