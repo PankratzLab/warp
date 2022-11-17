@@ -49,6 +49,7 @@ task VariantEffectPredictor {
     File ref_fasta
     File ref_fasta_index
     String vep_pick_string
+    String vep_output_format
     String? vep_fields
     File vep_cache_dir
     File? topmed_vcf
@@ -81,7 +82,7 @@ task VariantEffectPredictor {
       --flag_pick \
       --pick_order ~{vep_pick_string} \
       --fasta ~{ref_fasta} \
-      --vcf \
+      --~{vep_output_format} \
       --compress_output bgzip \
       -i ~{input_vcf} \
       -o "~{output_base_name}.vep.vcf.gz" \
