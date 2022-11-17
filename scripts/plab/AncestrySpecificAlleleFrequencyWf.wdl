@@ -111,7 +111,7 @@ task AssembleVcf {
 
   command {
     # We can naively concatenate these files because they were just split from the same input file.
-    bcftools concat -n ~{sep=' ' region_vcfs} -Oz -o "~{output_file_name}"
+    bcftools concat -a -D ~{sep=' ' region_vcfs} -Oz -o "~{output_file_name}"
   } 
 
   runtime {
