@@ -55,7 +55,7 @@ workflow AncestrySpecificAlleleFrequency {
     
     call IndexShard {
       input:
-        input_vcf = CalculateAncestrySpecificTagsForRegion.output.vcf,
+        input_vcf = CalculateAncestrySpecificTagsForRegion.output_vcf,
         output_file_name = output_file_name,
         
         docker = bcftools_docker
