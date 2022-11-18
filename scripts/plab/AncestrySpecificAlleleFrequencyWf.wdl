@@ -72,8 +72,8 @@ workflow AncestrySpecificAlleleFrequency {
   }
 
   output {
-    Array[File] region_vcfs = CalculateAncestrySpecificTagsForRegion.output_vcf
-    Array[File] region_vcf_indices = IndexShard.output_vcf_index
+#    Array[File] region_vcfs = CalculateAncestrySpecificTagsForRegion.output_vcf
+#    Array[File] region_vcf_indices = IndexShard.output_vcf_index
     File output_vcf = AssembleVcf.output_vcf
   }
 }
