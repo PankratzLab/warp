@@ -39,6 +39,8 @@ workflow AncestrySpecificAlleleFrequency {
   Array[String] intervals = read_lines(interval_file)
 
   scatter (idx in range(length(intervals)) ) {
+    String output_file_name = output_base_name + "." + idx + ".vcf.gz"
+    
     call CalculateAncestrySpecificTagsForRegion {
       input: 
         input_bcf = input_bcf,
@@ -46,8 +48,16 @@ workflow AncestrySpecificAlleleFrequency {
         region = intervals[idx], 
         ancestries = ancestries,
         info_tags = info_tags,
-        output_file_name = output_base_name + "." + idx + ".vcf.gz",
+        output_file_name = output_file_name,
 
+        docker = bcftools_docker
+    }
+    
+    call IndexShard {
+      input:
+        input_vcf = CalculateAncestrySpecificTagsForRegion.output.vcf,
+        output_file_name = output_file_name,
+        
         docker = bcftools_docker
     }
   }
@@ -55,14 +65,15 @@ workflow AncestrySpecificAlleleFrequency {
   call AssembleVcf {
     input:
       region_vcfs = CalculateAncestrySpecificTagsForRegion.output_vcf,
-      region_vcf_indices = CalculateAncestrySpecificTagsForRegion.output_vcf_index,
+      region_vcf_indices = IndexShard.output_vcf_index,
       output_file_name = output_base_name + ".af.vcf.gz",
 
       docker = bcftools_docker
   }
 
   output {
-#    Array[File] region_vcfs = CalculateAncestrySpecificTagsForRegion.output_vcf
+    Array[File] region_vcfs = CalculateAncestrySpecificTagsForRegion.output_vcf
+    Array[File] region_vcf_indices = IndexShard.output_vcf_index
     File output_vcf = AssembleVcf.output_vcf
   }
 }
@@ -101,7 +112,28 @@ task CalculateAncestrySpecificTagsForRegion {
     File output_vcf_index = "~{output_file_name}.tbi"
   }   
 }
+# Index shards so that concat can remove duplicates
+task IndexShard {
+  input{
+    File input_vcf
+    String output_file_name
+    
+    String docker
+  }
+    
+  command {
+    bcftools index -t ~{input_vcf}
+  }
 
+  runtime {
+    docker: docker
+  }
+
+  output {
+    File output_vcf_index = "~{output_file_name}.tbi"
+  } 
+    
+}
 # Aggregate the split regions back into a single file.
 task AssembleVcf {
   input {
