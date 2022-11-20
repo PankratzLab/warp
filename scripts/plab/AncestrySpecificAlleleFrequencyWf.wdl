@@ -52,6 +52,7 @@ workflow AncestrySpecificAlleleFrequency {
 
         docker = bcftools_docker
     }
+  }
 
   call AssembleVcf {
     input:
