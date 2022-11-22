@@ -86,8 +86,8 @@ task VariantEffectPredictor {
       --compress_output bgzip \
       -i ~{input_vcf} \
       -o "~{output_base_name}.vep.vcf.gz" \
-      ~{true='--fields  ~{vep_fields}', false="" specify_fields} \
-      ~{true='--custom  ~{topmed_vcf},~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF', false="" use_topmed} \
+      ~{true='--fields  ~{vep_fields}' false="" specify_fields} \
+      ~{true='--custom  ~{topmed_vcf},~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF' false="" use_topmed} \
       --force_overwrite
   }
 
