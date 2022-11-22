@@ -62,8 +62,8 @@ task VariantEffectPredictor {
   # Reference the index files even though they aren't passed as arguments to vep so cromwell will see them.
   File vcf_index = input_vcf_index
   File fasta_index = ref_fasta_index
-  Boolean specify_fields = if( defined(vep_fields) ) then "--fields  ~{vep_fields}" else ""
-  Boolean custom_topmed = if( defined(topmed_vcf) ) then "--custom  ~{topmed_vcf},~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
+  String specify_fields = if( defined(vep_fields) ) then "--fields  ~{vep_fields}" else ""
+  String custom_topmed = if( defined(topmed_vcf) ) then "--custom  ~{topmed_vcf},~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
   File tm_index = topmed_index
 
   parameter_meta {
