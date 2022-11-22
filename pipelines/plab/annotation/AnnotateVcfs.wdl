@@ -60,7 +60,7 @@ workflow AnnotateVcfs {
 	vep_output_format = vep_output_format,
 	vep_fields = vep_fields,
 	vep_cache_dir = vep_cache_dir,
-	topmed = topmed_vcf,
+	topmed_vcf = topmed_vcf,
 	topmed_index = topmed_index,
 	topmed_short_name = topmed_short_name
     }
