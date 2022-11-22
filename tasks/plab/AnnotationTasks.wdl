@@ -65,9 +65,9 @@ task VariantEffectPredictor {
   File tm_index = topmed_index
   
   # Access the topmed vcf as a file object so Cromwell will substitute the local path for us.
-  File local_topmed_path = topmed_vcf
+  File tm = topmed_vcf
   String specify_fields = if( defined(vep_fields) ) then "--fields  ~{vep_fields}" else ""
-  String custom_topmed = if( defined(topmed_vcf) ) then "--custom  ~{local_topmed_path},~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
+  String topmed_attrs = if( defined(topmed_vcf) ) then ",~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
 
 
   parameter_meta {
@@ -90,9 +90,9 @@ task VariantEffectPredictor {
       --compress_output bgzip \
       -i ~{input_vcf} \
       -o "~{output_base_name}.vep.vcf.gz" \
+      --force_overwrite \
       ~{specify_fields} \
-      ~{custom_topmed} \
-      --force_overwrite
+      ~{if defined(topmed_vcf) then "--custom " + topmed_vcf + topmed_attrs else ""} 
   }
 
   runtime {
