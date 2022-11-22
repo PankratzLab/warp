@@ -62,8 +62,8 @@ task VariantEffectPredictor {
   # Reference the index files even though they aren't passed as arguments to vep so cromwell will see them.
   File vcf_index = input_vcf_index
   File fasta_index = ref_fasta_index
-  Boolean specify_fields = defined(vep_fields)
-  Boolean use_topmed = defined(topmed_vcf)
+  Boolean specify_fields = if( defined(vep_fields) ) then "--fields  ~{vep_fields}" else ""
+  Boolean custom_topmed = if( defined(topmed_vcf) ) then "--custom  ~{topmed_vcf},~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
   File tm_index = if topmed_annotations then topmed_index else None
 
   parameter_meta {
@@ -86,8 +86,8 @@ task VariantEffectPredictor {
       --compress_output bgzip \
       -i ~{input_vcf} \
       -o "~{output_base_name}.vep.vcf.gz" \
-      ~{true='--fields  ~{vep_fields}' false="" specify_fields} \
-      ~{true='--custom  ~{topmed_vcf},~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF' false="" use_topmed} \
+      ~{specify_fields} \
+      ~{custom_topmed} \
       --force_overwrite
   }
 
