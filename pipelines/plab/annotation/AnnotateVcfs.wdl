@@ -58,7 +58,7 @@ workflow AnnotateVcfs {
 	ref_fasta_index = ref_fasta_index,
 	vep_pick_string = vep_pick_string,
 	vep_output_format = vep_output_format,
-	vep_fields,
+	vep_fields = vep_fields,
 	vep_cache_dir = vep_cache_dir,
 	topmed = topmed_vcf,
 	topmed_index = topmed_index,
