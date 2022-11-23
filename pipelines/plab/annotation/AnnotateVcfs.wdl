@@ -68,8 +68,6 @@ workflow AnnotateVcfs {
 
   # Outputs that will be retained when execution is complete
   output {
-    Array[File] split_vcf = SplitMultiallelics.output_vcf
-    Array[File] split_vcf_index = SplitMultiallelics.output_vcf_index
     Array[File] annotated_vcf = VariantEffectPredictor.output_vcf
     Array[File] annotated_vcf_summary = VariantEffectPredictor.output_vcf_summary   
   }
