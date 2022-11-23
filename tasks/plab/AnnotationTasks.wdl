@@ -104,3 +104,24 @@ task VariantEffectPredictor {
     File output_vcf_summary = "~{output_base_name}.vep.vcf.gz_summary.html"
   }
 }
+
+task IndexAnnotatedVcf {
+  input{
+    File input_vcf
+
+    String bcftools_docker = "staphb/bcftools:1.11"
+  }
+  String output_file_name = basename(input_vcf) + ".tbi"
+      
+  command {
+    bcftools index -t -o "~{output_file_name}" ~{input_vcf}
+  }
+
+  runtime {
+    docker: bcftools_docker
+  }
+
+  output {
+    File output_vcf_index = "~{output_file_name}"
+  }  
+}
