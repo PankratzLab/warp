@@ -48,7 +48,13 @@ task VariantEffectPredictor {
     String output_base_name
     File ref_fasta
     File ref_fasta_index
+    String vep_pick_string
+    String vep_output_format
+    String? vep_fields
     File vep_cache_dir
+    File? topmed_vcf
+    File? topmed_index
+    String? topmed_short_name
 
     String vep_docker = "ensemblorg/ensembl-vep:release_107.0"
   }
@@ -56,7 +62,13 @@ task VariantEffectPredictor {
   # Reference the index files even though they aren't passed as arguments to vep so cromwell will see them.
   File vcf_index = input_vcf_index
   File fasta_index = ref_fasta_index
-  String pick_string = "rank"
+  File tm_index = topmed_index
+  
+  # Access the topmed vcf as a file object so Cromwell will substitute the local path for us.
+  File tm = topmed_vcf
+  String specify_fields = if( defined(vep_fields) ) then "--fields  ~{vep_fields}" else ""
+  String topmed_attrs = if( defined(topmed_vcf) ) then ",~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
+
 
   parameter_meta {
     vep_cache_dir: {
@@ -64,7 +76,7 @@ task VariantEffectPredictor {
       localization_optional: true
     }
   }
-
+  
   command {
     vep \
       --cache \
@@ -72,13 +84,15 @@ task VariantEffectPredictor {
       --merged \
       --everything \
       --flag_pick \
-      --pick_order ~{pick_string} \
+      --pick_order ~{vep_pick_string} \
       --fasta ~{ref_fasta} \
-      --vcf \
+      --~{vep_output_format} \
       --compress_output bgzip \
       -i ~{input_vcf} \
       -o "~{output_base_name}.vep.vcf.gz" \
-      --force_overwrite
+      --force_overwrite \
+      ~{specify_fields} \
+      ~{if defined(topmed_vcf) then "--custom " + topmed_vcf + topmed_attrs else ""} 
   }
 
   runtime {
@@ -89,4 +103,25 @@ task VariantEffectPredictor {
     File output_vcf = "~{output_base_name}.vep.vcf.gz"
     File output_vcf_summary = "~{output_base_name}.vep.vcf.gz_summary.html"
   }
+}
+
+task IndexAnnotatedVcf {
+  input{
+    File input_vcf
+
+    String bcftools_docker = "staphb/bcftools:1.11"
+  }
+  String output_file_name = basename(input_vcf) + ".tbi"
+      
+  command {
+    bcftools index -t -o "~{output_file_name}" ~{input_vcf}
+  }
+
+  runtime {
+    docker: bcftools_docker
+  }
+
+  output {
+    File output_vcf_index = "~{output_file_name}"
+  }  
 }

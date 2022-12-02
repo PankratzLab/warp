@@ -39,6 +39,8 @@ workflow AncestrySpecificAlleleFrequency {
   Array[String] intervals = read_lines(interval_file)
 
   scatter (idx in range(length(intervals)) ) {
+    String output_file_name = output_base_name + "." + idx + ".vcf.gz"
+    
     call CalculateAncestrySpecificTagsForRegion {
       input: 
         input_bcf = input_bcf,
@@ -46,7 +48,7 @@ workflow AncestrySpecificAlleleFrequency {
         region = intervals[idx], 
         ancestries = ancestries,
         info_tags = info_tags,
-        output_file_name = output_base_name + "." + idx + ".vcf.gz",
+        output_file_name = output_file_name,
 
         docker = bcftools_docker
     }
@@ -55,6 +57,7 @@ workflow AncestrySpecificAlleleFrequency {
   call AssembleVcf {
     input:
       region_vcfs = CalculateAncestrySpecificTagsForRegion.output_vcf,
+      region_vcf_indices = CalculateAncestrySpecificTagsForRegion.output_vcf_index,
       output_file_name = output_base_name + ".af.vcf.gz",
 
       docker = bcftools_docker
@@ -62,6 +65,7 @@ workflow AncestrySpecificAlleleFrequency {
 
   output {
 #    Array[File] region_vcfs = CalculateAncestrySpecificTagsForRegion.output_vcf
+#    Array[File] region_vcf_indices = CalculateAncestrySpecificTagsForRegion.output_vcf_index
     File output_vcf = AssembleVcf.output_vcf
   }
 }
@@ -87,7 +91,8 @@ task CalculateAncestrySpecificTagsForRegion {
   File bcf_index = input_bcf_index
    
   command {
-    bcftools view -r ~{region} ~{input_bcf} -Ou | bcftools +fill-tags -Oz -o "~{output_file_name}" -- -S ~{ancestries} -t ~{info_tags} 
+    bcftools view -r ~{region} ~{input_bcf} -Ou | bcftools +fill-tags -Ou -- -S ~{ancestries} -t ~{info_tags} | bcftools view -G -Oz -o "~{output_file_name}"
+    bcftools index -t ~{output_file_name}
   }
 
   runtime {
@@ -96,7 +101,7 @@ task CalculateAncestrySpecificTagsForRegion {
 
   output {
     File output_vcf = "~{output_file_name}"
-
+    File output_vcf_index = "~{output_file_name}.tbi"
   }   
 }
 
@@ -105,13 +110,14 @@ task AssembleVcf {
   input {
     String output_file_name
     Array[File] region_vcfs
-
+    Array[File] region_vcf_indices
+    
     String docker
   }
-
+  Array[File] index_files = region_vcf_indices
+  
   command {
-    # We can naively concatenate these files because they were just split from the same input file.
-    bcftools concat -n ~{sep=' ' region_vcfs} -Oz -o "~{output_file_name}"
+    bcftools concat -a -D ~{sep=' ' region_vcfs} -Oz -o "~{output_file_name}"
   } 
 
   runtime {
@@ -120,6 +126,5 @@ task AssembleVcf {
  
   output {
     File output_vcf = "~{output_file_name}"
-
   }
 }
