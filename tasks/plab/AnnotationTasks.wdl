@@ -55,8 +55,8 @@ task VariantEffectPredictor {
     File? topmed_vcf
     File? topmed_index
     String? topmed_short_name
-    Array[File?] cadd_sources
-    Array[File?] cadd_index_files
+    Array[File]+? cadd_sources
+    Array[File]+? cadd_index_files
     String? cadd_short_name
 
     String vep_docker = "/home/pankrat2/public/bin/gatk4/sif_cache/vep.sif"
