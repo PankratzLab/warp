@@ -74,8 +74,8 @@ task VariantEffectPredictor {
   String topmed_attrs = if( defined(topmed_vcf) ) then ",~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
   
   # Tack information about TOPMed and/or CADD annotations onto the output filenames.
-  String output_file_name = if(defined(topmed_short_name) then output_base_name + "_" + topmed_short_name else output_base_name
-  output_file_name = if(defined(cadd_short_name) then output_base_name + "_" + cadd_short_name else output_base_name
+  String output_file_name = if( defined(topmed_short_name) ) then output_base_name + "_" + topmed_short_name else output_base_name
+  output_file_name = if( defined(cadd_short_name) ) then output_base_name + "_" + cadd_short_name else output_base_name
 
   parameter_meta {
     vep_cache_dir: {
