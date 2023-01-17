@@ -75,7 +75,7 @@ task VariantEffectPredictor {
   
   # Access the CADD data files as File objects so Cromwell will substitute the local path, and build the plugin command string.
   Array[File] cadd_input = cadd_sources
-  String cadd_attrs = if( defined(cadd_input) ) then "CADD,~{sep=' ' cadd_input}" else ""
+  String cadd_attrs = if( defined(cadd_input) ) then 'CADD,~{sep=" " cadd_input}' else ''
   
   # Tack information about TOPMed and/or CADD annotations onto the output filenames.
   String topmed = if( defined(topmed_short_name) ) then "_" + topmed_short_name else ""
