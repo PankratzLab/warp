@@ -37,6 +37,9 @@ workflow AnnotateVcfs {
     File? topmed_vcf
     File? topmed_index
     String? topmed_short_name
+    Array[File?] cadd_sources
+    Array[File?] cadd_index_files
+    String? cadd_short_name
   }
 
   scatter ( unit in vcf_units ) {
@@ -62,7 +65,10 @@ workflow AnnotateVcfs {
 	vep_cache_dir = vep_cache_dir,
 	topmed_vcf = topmed_vcf,
 	topmed_index = topmed_index,
-	topmed_short_name = topmed_short_name
+	topmed_short_name = topmed_short_name,
+	cadd_sources = cadd_sources,
+	cadd_index_files = cadd_index_files,
+	cadd_short_name = cadd_short_name
     }
     
     call Annotate.IndexAnnotatedVcf {
