@@ -55,20 +55,27 @@ task VariantEffectPredictor {
     File? topmed_vcf
     File? topmed_index
     String? topmed_short_name
+    Array[File?] cadd_sources
+    Array[File?] cadd_index_files
+    String? cadd_short_name
 
-    String vep_docker = "ensemblorg/ensembl-vep:release_107.0"
+    String vep_docker = "/home/pankrat2/public/bin/gatk4/sif_cache/vep.sif"
   }
 
   # Reference the index files even though they aren't passed as arguments to vep so cromwell will see them.
   File vcf_index = input_vcf_index
   File fasta_index = ref_fasta_index
   File tm_index = topmed_index
+  Array[File] cadd_index_array = cadd_index_files
   
   # Access the topmed vcf as a file object so Cromwell will substitute the local path for us.
   File tm = topmed_vcf
   String specify_fields = if( defined(vep_fields) ) then "--fields  ~{vep_fields}" else ""
   String topmed_attrs = if( defined(topmed_vcf) ) then ",~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
-
+  
+  # Tack information about TOPMed and/or CADD annotations onto the output filenames.
+  String output_file_name = if(defined(topmed_short_name) then output_base_name + "_" + topmed_short_name else output_base_name
+  output_file_name = if(defined(cadd_short_name) then output_base_name + "_" + cadd_short_name else output_base_name
 
   parameter_meta {
     vep_cache_dir: {
@@ -89,10 +96,11 @@ task VariantEffectPredictor {
       --~{vep_output_format} \
       --compress_output bgzip \
       -i ~{input_vcf} \
-      -o "~{output_base_name}.vep.vcf.gz" \
+      -o "~{output_file_name}.vep.vcf.gz" \
       --force_overwrite \
       ~{specify_fields} \
       ~{if defined(topmed_vcf) then "--custom " + topmed_vcf + topmed_attrs else ""} 
+      ~{if defined(cadd_sources) then "--plugin CADD," + sep(' ', cadd_sources) else ""}
   }
 
   runtime {
@@ -100,8 +108,8 @@ task VariantEffectPredictor {
   }
 
   output {
-    File output_vcf = "~{output_base_name}.vep.vcf.gz"
-    File output_vcf_summary = "~{output_base_name}.vep.vcf.gz_summary.html"
+    File output_vcf = "~{output_file_name}.vep.vcf.gz"
+    File output_vcf_summary = "~{output_file_name}.vep.vcf.gz_summary.html"
   }
 }
 
