@@ -73,6 +73,10 @@ task VariantEffectPredictor {
   String specify_fields = if( defined(vep_fields) ) then "--fields  ~{vep_fields}" else ""
   String topmed_attrs = if( defined(topmed_vcf) ) then ",~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
   
+  # Access the CADD data files as File objects so Cromwell will substitute the local path, and build the plugin command string.
+  Array[File] cadd_input = cadd_sources
+  String cadd_attrs = if( defined(cadd_input) ) then "CADD,~{sep=' ' cadd_input}" else ""
+  
   # Tack information about TOPMed and/or CADD annotations onto the output filenames.
   String topmed = if( defined(topmed_short_name) ) then "_" + topmed_short_name else ""
   String cadd = if( defined(cadd_short_name) ) then "_" + cadd_short_name else ""
@@ -101,7 +105,7 @@ task VariantEffectPredictor {
       --force_overwrite \
       ~{specify_fields} \
       ~{if defined(topmed_vcf) then "--custom " + topmed_vcf + topmed_attrs else ""} 
-      ~{if defined(cadd_sources) then "--plugin CADD," + sep(' ', cadd_sources) else ""}
+      ~{if defined(cadd_sources) then "--plugin " + cadd_attrs else ""}
   }
 
   runtime {
