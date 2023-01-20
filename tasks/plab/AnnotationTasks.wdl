@@ -59,7 +59,7 @@ task VariantEffectPredictor {
     Array[File]+? cadd_index_files
     String? cadd_short_name
 
-    String vep_docker = "/home/pankrat2/public/bin/gatk4/sif_cache/vep.sif"
+    String vep_docker = "quay.io/jlanej/vep-plugin"
   }
 
   # Reference the index files even though they aren't passed as arguments to vep so cromwell will see them.
