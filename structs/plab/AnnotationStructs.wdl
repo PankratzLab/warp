@@ -12,6 +12,7 @@ struct VepPluginDataSource {
 }
 
 struct VepPlugin {
-  String short_name
+  String name
+  String version_string
   Array[VepPluginDataSource] data_sources
 }
