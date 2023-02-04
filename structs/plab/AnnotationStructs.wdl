@@ -7,8 +7,8 @@ struct VcfAndIndex {
 }
 
 struct VepPlugin {
-  String name
+  String short_name
   String version_string
   Array[File] data_sources
-  Array[File]? index_files
+  Array[File] index_files
 }
