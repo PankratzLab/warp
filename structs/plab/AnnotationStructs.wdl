@@ -6,13 +6,9 @@ struct VcfAndIndex {
   String output_base_name
 }
 
-struct VepPluginDataSource {
-  File data
-  File index
-}
-
 struct VepPlugin {
   String name
   String version_string
-  Array[VepPluginDataSource] data_sources
+  Array[File] data_sources
+  Array[File]? index_files
 }
