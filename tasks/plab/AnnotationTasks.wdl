@@ -56,8 +56,8 @@ task VariantEffectPredictor {
     File? topmed_index
     String? topmed_short_name
     Boolean has_cadd_plugin
-    Array[File]+? cadd_data_sources
-    Array[File]+? cadd_index_files
+    Array[String]+? cadd_data_sources
+    Array[String]+? cadd_index_files
     String? cadd_plugin_version
     String cadd_cmd
 
@@ -70,7 +70,6 @@ task VariantEffectPredictor {
   File vcf_index = input_vcf_index
   File fasta_index = ref_fasta_index
   File tm_index = topmed_index
-  #Array[File] cadd_index_array = cadd_index_files
   
   # Access the topmed vcf as a file object so Cromwell will substitute the local path for us.
   File tm = topmed_vcf
