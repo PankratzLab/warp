@@ -55,31 +55,30 @@ task VariantEffectPredictor {
     File? topmed_vcf
     File? topmed_index
     String? topmed_short_name
-    Array[File]+? cadd_sources
+    Boolean has_cadd_plugin
+    Array[File]+? cadd_data_sources
     Array[File]+? cadd_index_files
-    String? cadd_short_name
+    String? cadd_plugin_version
 
     String vep_docker = "quay.io/jlanej/vep-plugin"
   }
 
+  File vep_dir = vep_cache_dir
+  
   # Reference the index files even though they aren't passed as arguments to vep so cromwell will see them.
   File vcf_index = input_vcf_index
   File fasta_index = ref_fasta_index
   File tm_index = topmed_index
-  Array[File] cadd_index_array = cadd_index_files
+  #Array[File] cadd_index_array = cadd_index_files
   
   # Access the topmed vcf as a file object so Cromwell will substitute the local path for us.
   File tm = topmed_vcf
   String specify_fields = if( defined(vep_fields) ) then "--fields  ~{vep_fields}" else ""
   String topmed_attrs = if( defined(topmed_vcf) ) then ",~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
   
-  # Access the CADD data files as File objects so Cromwell will substitute the local path, and build the plugin command string.
-  Array[File] cadd_input = cadd_sources
-  String cadd_attrs = if( defined(cadd_input) ) then 'CADD,~{sep=" " cadd_input}' else ''
-  
   # Tack information about TOPMed and/or CADD annotations onto the output filenames.
   String topmed = if( defined(topmed_short_name) ) then "_" + topmed_short_name else ""
-  String cadd = if( defined(cadd_short_name) ) then "_" + cadd_short_name else ""
+  String cadd = if( has_cadd_plugin ) then "_" + cadd_plugin_version else ""
   String output_file_name = output_base_name + topmed + cadd
 
   parameter_meta {
@@ -89,7 +88,10 @@ task VariantEffectPredictor {
     }
   }
   
-  command {
+  command <<<
+  # set the bash variable needed for the command-line
+    bash_cadd_sources=~{sep=",vep_dir/" cadd_data_sources}
+    
     vep \
       --cache \
       --dir_cache ~{vep_cache_dir} \
@@ -104,9 +106,9 @@ task VariantEffectPredictor {
       -o "~{output_file_name}.vep.vcf.gz" \
       --force_overwrite \
       ~{specify_fields} \
-      ~{if defined(topmed_vcf) then "--custom " + topmed_vcf + topmed_attrs else ""} 
-      ~{if defined(cadd_sources) then "--plugin " + cadd_attrs else ""}
-  }
+      ~{if defined(topmed_vcf) then "--custom " + topmed_vcf + topmed_attrs else ""} \
+      ~{if has_cadd_plugin then cadd_cmd else ""}
+  >>>
 
   runtime {
     docker: vep_docker
