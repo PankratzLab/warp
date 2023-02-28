@@ -59,6 +59,7 @@ task VariantEffectPredictor {
     Array[File]+? cadd_data_sources
     Array[File]+? cadd_index_files
     String? cadd_plugin_version
+    String cadd_cmd
 
     String vep_docker = "quay.io/jlanej/vep-plugin"
   }
