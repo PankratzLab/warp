@@ -37,11 +37,14 @@ workflow AnnotateVcfs {
     File? topmed_vcf
     File? topmed_index
     String? topmed_short_name
-    Array[File]+? cadd_sources
+    Boolean has_cadd_plugin = false
+    Array[File]+? cadd_data_sources
     Array[File]+? cadd_index_files
-    String? cadd_short_name
+    String? cadd_plugin_version
   }
 
+  String cadd_cmd = "--plugin CADD,$bash_cadd_sources"
+  
   scatter ( unit in vcf_units ) {
     call Annotate.SplitMultiallelics {
       input:
@@ -66,9 +69,11 @@ workflow AnnotateVcfs {
 	topmed_vcf = topmed_vcf,
 	topmed_index = topmed_index,
 	topmed_short_name = topmed_short_name,
-	cadd_sources = cadd_sources,
+	has_cadd_plugin = has_cadd_plugin,
+	cadd_data_sources = cadd_data_sources,
 	cadd_index_files = cadd_index_files,
-	cadd_short_name = cadd_short_name
+	cadd_plugin_version = cadd_plugin_version,
+	cadd_cmd = cadd_cmd
     }
     
     call Annotate.IndexAnnotatedVcf {
