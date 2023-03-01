@@ -105,6 +105,7 @@ task VariantEffectPredictor {
       -i ~{input_vcf} \
       -o "~{output_file_name}.vep.vcf.gz" \
       --force_overwrite \
+      --offline \
       ~{specify_fields} \
       ~{if defined(topmed_vcf) then "--custom " + topmed_vcf + topmed_attrs else ""} \
       ~{if has_cadd_plugin then cadd_cmd else ""}
