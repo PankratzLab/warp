@@ -63,8 +63,6 @@ task VariantEffectPredictor {
 
     String vep_docker = "quay.io/jlanej/vep-plugin"
   }
-
-  File vep_dir = vep_cache_dir
   
   # Reference the index files even though they aren't passed as arguments to vep so cromwell will see them.
   File vcf_index = input_vcf_index
@@ -90,7 +88,7 @@ task VariantEffectPredictor {
   
   command <<<
   # set the bash variable needed for the command-line
-    bash_cadd_sources=~{sep=",vep_dir/" cadd_data_sources}
+    bash_cadd_sources=~{sep="," cadd_data_sources}
     
     vep \
       --cache \
