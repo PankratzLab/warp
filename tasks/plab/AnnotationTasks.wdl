@@ -87,8 +87,11 @@ task VariantEffectPredictor {
   }
   
   command <<<
-  # set the bash variable needed for the command-line
-    bash_cadd_sources=~{sep="," cadd_data_sources}
+  for i in "${!cadd_data_sources}[@]}" ; do
+	   cadd_data_sources[$i]="~{vep_cache_dir}/${cadd_data_sources[i]}"
+ 	   echo $data_sources
+   done
+   bash_cadd_sources=~{sep="," cadd_data_sources}
     
     vep \
       --cache \
