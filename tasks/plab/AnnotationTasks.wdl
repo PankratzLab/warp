@@ -92,6 +92,7 @@ task VariantEffectPredictor {
       echo $data_sources
     done
     bash_cadd_sources=~{sep="," cadd_data_sources}
+    echo $bash_cadd_sources
 
     vep \
       --cache \
@@ -109,7 +110,7 @@ task VariantEffectPredictor {
       --offline \
       ~{specify_fields} \
       ~{if defined(topmed_vcf) then "--custom " + topmed_vcf + topmed_attrs else ""} \
-      ~{if has_cadd_plugin then cadd_cmd else ""}
+      ~{if has_cadd_plugin then "--plugin CADD," + bash_cadd_sources else ""}
   >>>
 
   runtime {
