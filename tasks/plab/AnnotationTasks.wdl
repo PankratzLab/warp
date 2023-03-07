@@ -161,10 +161,10 @@ task VariantEffectPredictorWithPlugin {
   
   command <<<
     for i in ${!cadd_data_sources[@]} ; do
-      cadd_data_paths[$i]="~{vep_plugin_dir}/${cadd_data_sources[$i]}"
-      echo cadd_data_path: ${cadd_data_paths[i]} >&2
+    echo loop: $i >&2
+      cadd_data_sources[$i]="~{vep_plugin_dir}"/"${cadd_data_sources[$i]}"
     done
-    bash_cadd_sources=~{sep="," cadd_data_paths}
+    bash_cadd_sources=~{sep="," cadd_data_sources}
     echo cadd_cmd ~{cadd_cmd} >&2
 
     export PERL5LIB=$PERL5LIB:~{vep_plugin_dir}
