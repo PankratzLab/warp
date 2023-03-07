@@ -34,7 +34,7 @@ workflow AnnotateVcfs {
     String vep_output_format = "vcf"
     String? vep_fields
     File vep_cache_dir
-    String vep_plugin_dir = ""
+    File vep_plugin_dir = ""
     File? topmed_vcf
     File? topmed_index
     String? topmed_short_name
