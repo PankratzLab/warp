@@ -163,6 +163,7 @@ task VariantEffectPredictorWithPlugin {
     bash_cadd_sources=~{sep="," cadd_data_sources}
     echo $bash_cadd_sources
 
+    export PERL5LIB=$PERL5LIB:~{vep_plugin_dir}
     vep \
       --cache \
       --dir_cache ~{vep_cache_dir} \
