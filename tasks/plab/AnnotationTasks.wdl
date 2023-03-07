@@ -52,13 +52,14 @@ task VariantEffectPredictor {
     String vep_output_format
     String? vep_fields
     File vep_cache_dir
+    String vep_plugin_dir
     File? topmed_vcf
     File? topmed_index
     String? topmed_short_name
     Boolean has_cadd_plugin
-    Array[String]+? cadd_data_sources
-    Array[String]+? cadd_index_files
-    String? cadd_plugin_version
+    Array[String] cadd_data_sources
+    Array[String] cadd_index_files
+    String cadd_plugin_version
     String cadd_cmd
 
     String vep_docker = "quay.io/jlanej/vep-plugin"
