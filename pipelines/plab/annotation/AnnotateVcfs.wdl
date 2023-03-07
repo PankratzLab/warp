@@ -56,26 +56,46 @@ workflow AnnotateVcfs {
 	max_indel_length = max_indel_length
     }
 
-    call Annotate.VariantEffectPredictor {
-      input:
-	input_vcf = SplitMultiallelics.output_vcf,
-	input_vcf_index = SplitMultiallelics.output_vcf_index,
-	output_base_name = unit.output_base_name,
-    	ref_fasta = ref_fasta,
-	ref_fasta_index = ref_fasta_index,
-	vep_pick_string = vep_pick_string,
-	vep_output_format = vep_output_format,
-	vep_fields = vep_fields,
-	vep_cache_dir = vep_cache_dir,
-	vep_plugin_dir = vep_plugin_dir,
-	topmed_vcf = topmed_vcf,
-	topmed_index = topmed_index,
-	topmed_short_name = topmed_short_name,
-	has_cadd_plugin = has_cadd_plugin,
-	cadd_data_sources = cadd_data_sources,
-	cadd_index_files = cadd_index_files,
-	cadd_plugin_version = cadd_plugin_version,
-	cadd_cmd = cadd_cmd
+    if( !has_cadd_plugin ) {
+        call Annotate.VariantEffectPredictor {
+	      input:
+		input_vcf = SplitMultiallelics.output_vcf,
+		input_vcf_index = SplitMultiallelics.output_vcf_index,
+		output_base_name = unit.output_base_name,
+    		ref_fasta = ref_fasta,
+		ref_fasta_index = ref_fasta_index,
+		vep_pick_string = vep_pick_string,
+		vep_output_format = vep_output_format,
+		vep_fields = vep_fields,
+		vep_cache_dir = vep_cache_dir,
+		topmed_vcf = topmed_vcf,
+		topmed_index = topmed_index,
+		topmed_short_name = topmed_short_name,
+    	}
+    }    
+    
+    if( has_cadd_plugin ) {
+        call Annotate.VariantEffectPredictorWithPlugin {
+	      input:
+		input_vcf = SplitMultiallelics.output_vcf,
+		input_vcf_index = SplitMultiallelics.output_vcf_index,
+		output_base_name = unit.output_base_name,
+    		ref_fasta = ref_fasta,
+		ref_fasta_index = ref_fasta_index,
+		vep_pick_string = vep_pick_string,
+		vep_output_format = vep_output_format,
+		vep_fields = vep_fields,
+		vep_cache_dir = vep_cache_dir,
+		vep_plugin_dir = vep_plugin_dir,
+		topmed_vcf = topmed_vcf,
+		topmed_index = topmed_index,
+		topmed_short_name = topmed_short_name,
+		has_cadd_plugin = has_cadd_plugin,
+		cadd_data_sources = cadd_data_sources,
+		cadd_index_files = cadd_index_files,
+		cadd_plugin_version = cadd_plugin_version,
+		cadd_cmd = cadd_cmd
+    	}
     }
     
     call Annotate.IndexAnnotatedVcf {
