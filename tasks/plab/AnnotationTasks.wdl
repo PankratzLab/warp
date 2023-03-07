@@ -150,6 +150,7 @@ task VariantEffectPredictorWithPlugin {
 
   # Declare an empty array to populate with the CADD data source names after prepending the Cromwell vep plugin directory.
   Array[String] cadd_data_paths = []
+  String bash_cadd_sources = ""
   
   parameter_meta {
     vep_cache_dir: {
