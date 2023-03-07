@@ -34,13 +34,14 @@ workflow AnnotateVcfs {
     String vep_output_format = "vcf"
     String? vep_fields
     File vep_cache_dir
+    String vep_plugin_dir = ""
     File? topmed_vcf
     File? topmed_index
     String? topmed_short_name
     Boolean has_cadd_plugin = false
-    Array[String]+? cadd_data_sources
-    Array[String]+? cadd_index_files
-    String? cadd_plugin_version
+    Array[String] cadd_data_sources = []
+    Array[String] cadd_index_files = []
+    String cadd_plugin_version = ""
   }
 
   String cadd_cmd = "--plugin CADD,$bash_cadd_sources"
@@ -66,6 +67,7 @@ workflow AnnotateVcfs {
 	vep_output_format = vep_output_format,
 	vep_fields = vep_fields,
 	vep_cache_dir = vep_cache_dir,
+	vep_plugin_dir = vep_plugin_dir,
 	topmed_vcf = topmed_vcf,
 	topmed_index = topmed_index,
 	topmed_short_name = topmed_short_name,
