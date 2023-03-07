@@ -108,8 +108,8 @@ workflow AnnotateVcfs {
 
   # Outputs that will be retained when execution is complete
   output {
-    Array[File]? annotated_vcf = select_first([VariantEffectPredictorWithPlugin.output_vcf, VariantEffectPredictor.output_vcf])
-    Array[File]? annotated_vcf_summary = select_first([VariantEffectPredictorWithPlugin.output_vcf_summary, VariantEffectPredictor.output_vcf_summary])
+    Array[File?] annotated_vcf = select_first([VariantEffectPredictorWithPlugin.output_vcf, VariantEffectPredictor.output_vcf])
+    Array[File?] annotated_vcf_summary = select_first([VariantEffectPredictorWithPlugin.output_vcf_summary, VariantEffectPredictor.output_vcf_summary])
     Array[File] annotated_vcf_index = IndexAnnotatedVcf.output_vcf_index
   }
   meta {
