@@ -163,7 +163,7 @@ task VariantEffectPredictorWithPlugin {
     declare -a CADD_SOURCES=(~{sep=',' cadd_data_sources})
     
     for i in ${CADD_SOURCES[@]}; do
-      cadd_data_sources[$i]="~{vep_plugin_dir}"/"${CADD_SOURCES[$i]}"
+      cadd_data_sources[$i]="~{vep_plugin_dir}/${CADD_SOURCES[$i]}"
     done
     bash_cadd_sources=~{sep=',' cadd_data_sources}
     echo cadd_cmd ~{cadd_cmd} >&2
