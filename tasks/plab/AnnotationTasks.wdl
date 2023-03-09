@@ -148,10 +148,9 @@ task VariantEffectPredictorWithPlugin {
   String cadd = if( has_cadd_plugin ) then "_" + cadd_plugin_version else ""
   String output_file_name = output_base_name + topmed + cadd
 
-  # Declare an empty array to populate with the CADD data source names after prepending the Cromwell vep plugin directory.
-  Array[String] cadd_data_paths = []
-  String bash_cadd_sources = ""
-  String cmd_cadd = "--plugin CADD,"
+  # Declare variables for the CADD plugin data sources.
+  String src1 = cadd_data_sources[0]
+  String src2 = cadd_data_sources[1]
   
   parameter_meta {
     vep_cache_dir: {
@@ -161,14 +160,6 @@ task VariantEffectPredictorWithPlugin {
   }
   
   command <<<
-    declare -a CADD_SOURCES=("~{sep=',' cadd_data_sources}")
-    
-    for i in ${CADD_SOURCES[@]}; do
-      cadd_data_sources[$i]="~{vep_plugin_dir}" "/" "~{CADD_SOURCES[$i]}"
-    done
-    bash_cadd_sources=~{sep=',' cadd_data_sources}
-    echo cadd_cmd ~{cadd_cmd} >&2
-
     export PERL5LIB=$PERL5LIB:~{vep_plugin_dir}
     vep \
       --cache \
@@ -186,7 +177,7 @@ task VariantEffectPredictorWithPlugin {
       --offline \
       ~{specify_fields} \
       ~{if defined(topmed_vcf) then "--custom " + topmed_vcf + topmed_attrs else ""} \
-      ~{if has_cadd_plugin then cmd_cadd + bash_cadd_sources else ""}
+      ~{if has_cadd_plugin then "--plugin CADD," + vep_cache_dir + "/" + src1 + "," + vep_cache_dir + "/" + src2 else ""}
   >>>
 
   runtime {
