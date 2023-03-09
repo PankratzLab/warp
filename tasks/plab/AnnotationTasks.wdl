@@ -210,3 +210,26 @@ task IndexAnnotatedVcf {
     File output_vcf_index = "~{output_file_name}"
   }  
 }
+
+task GatherAndIndexVcfs {
+  input {
+    Array[File] input_vcfs
+    String output_vcf_name
+ 
+    String bcftools_docker = "staphb/bcftools:1.11"
+  }
+  
+  command {
+    bcftools concat ~{sep=' ' input_vcfs} -Oz -o "~{output_vcf_name}"
+    bcftools index -t ~{output_vcf_name}
+  }
+
+  runtime {
+    docker: bcftools_docker
+  }
+
+  output {
+    File output_vcf = "~{output_vcf_name}"
+    File output_vcf_index = "~{output_vcf_name}.tbi"
+  }
+}
