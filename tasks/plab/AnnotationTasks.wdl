@@ -233,3 +233,34 @@ task GatherAndIndexVcfs {
     File output_vcf_index = "~{output_vcf_name}.tbi"
   }
 }
+
+task VepFilterVcf {
+  input {
+    File input_vcf
+    Array[String] filters
+    String output_base_name
+    String filter_description = ""
+
+    String vep_docker = "quay.io/jlanej/vep-plugin"
+  }
+
+  String output_vcf_name = output_base_name + "_" + filter_description + ".vcf"
+
+  command {
+    filter_vep \
+      -i ~{input_vcf} \
+      --format "vcf" \
+      --gz \
+      --force_overwrite \
+      -o ~{output_vcf_name} \
+      ~{sep=" " filters}
+  }
+
+  runtime {
+    docker: vep_docker
+  }
+
+  output {
+    File output_vcf = "~{output_vcf_name}"
+  }
+}
