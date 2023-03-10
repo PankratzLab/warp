@@ -34,11 +34,18 @@ workflow AnnotateVcfs {
     String vep_output_format = "vcf"
     String? vep_fields
     File vep_cache_dir
+    File vep_plugin_dir = ""
     File? topmed_vcf
     File? topmed_index
     String? topmed_short_name
+    Boolean has_cadd_plugin = false
+    Array[String] cadd_data_sources = []
+    Array[String] cadd_index_files = []
+    String cadd_plugin_version = ""
   }
 
+  String cadd_cmd = "--plugin CADD,$bash_cadd_sources"
+  
   scatter ( unit in vcf_units ) {
     call Annotate.SplitMultiallelics {
       input:
@@ -49,32 +56,60 @@ workflow AnnotateVcfs {
 	max_indel_length = max_indel_length
     }
 
-    call Annotate.VariantEffectPredictor {
-      input:
-	input_vcf = SplitMultiallelics.output_vcf,
-	input_vcf_index = SplitMultiallelics.output_vcf_index,
-	output_base_name = unit.output_base_name,
-    	ref_fasta = ref_fasta,
-	ref_fasta_index = ref_fasta_index,
-	vep_pick_string = vep_pick_string,
-	vep_output_format = vep_output_format,
-	vep_fields = vep_fields,
-	vep_cache_dir = vep_cache_dir,
-	topmed_vcf = topmed_vcf,
-	topmed_index = topmed_index,
-	topmed_short_name = topmed_short_name
+    if( !has_cadd_plugin ) {
+        call Annotate.VariantEffectPredictor {
+	      input:
+		input_vcf = SplitMultiallelics.output_vcf,
+		input_vcf_index = SplitMultiallelics.output_vcf_index,
+		output_base_name = unit.output_base_name,
+    		ref_fasta = ref_fasta,
+		ref_fasta_index = ref_fasta_index,
+		vep_pick_string = vep_pick_string,
+		vep_output_format = vep_output_format,
+		vep_fields = vep_fields,
+		vep_cache_dir = vep_cache_dir,
+		topmed_vcf = topmed_vcf,
+		topmed_index = topmed_index,
+		topmed_short_name = topmed_short_name,
+    	}
+    }    
+    
+    if( has_cadd_plugin ) {
+        call Annotate.VariantEffectPredictorWithPlugin {
+	      input:
+		input_vcf = SplitMultiallelics.output_vcf,
+		input_vcf_index = SplitMultiallelics.output_vcf_index,
+		output_base_name = unit.output_base_name,
+    		ref_fasta = ref_fasta,
+		ref_fasta_index = ref_fasta_index,
+		vep_pick_string = vep_pick_string,
+		vep_output_format = vep_output_format,
+		vep_fields = vep_fields,
+		vep_cache_dir = vep_cache_dir,
+		vep_plugin_dir = vep_plugin_dir,
+		topmed_vcf = topmed_vcf,
+		topmed_index = topmed_index,
+		topmed_short_name = topmed_short_name,
+		has_cadd_plugin = has_cadd_plugin,
+		cadd_data_sources = cadd_data_sources,
+		cadd_index_files = cadd_index_files,
+		cadd_plugin_version = cadd_plugin_version,
+		cadd_cmd = cadd_cmd
+    	}
     }
+    
+    File vep_vcf = select_first([VariantEffectPredictorWithPlugin.output_vcf, VariantEffectPredictor.output_vcf])
     
     call Annotate.IndexAnnotatedVcf {
       input:
-	input_vcf = VariantEffectPredictor.output_vcf
+	input_vcf = vep_vcf
     }
   }
 
   # Outputs that will be retained when execution is complete
   output {
-    Array[File] annotated_vcf = VariantEffectPredictor.output_vcf
-    Array[File] annotated_vcf_summary = VariantEffectPredictor.output_vcf_summary
+    Array[File?] annotated_vcf = select_first([VariantEffectPredictorWithPlugin.output_vcf, VariantEffectPredictor.output_vcf])
+    Array[File?] annotated_vcf_summary = select_first([VariantEffectPredictorWithPlugin.output_vcf_summary, VariantEffectPredictor.output_vcf_summary])
     Array[File] annotated_vcf_index = IndexAnnotatedVcf.output_vcf_index
   }
   meta {
