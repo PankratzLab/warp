@@ -67,7 +67,7 @@ task VariantEffectPredictor {
   # Access the topmed vcf as a file object so Cromwell will substitute the local path for us.
   File tm = topmed_vcf
   String specify_fields = if( defined(vep_fields) ) then "--fields  ~{vep_fields}" else ""
-  String topmed_attrs = if( defined(topmed_vcf) ) then ",~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
+  String topmed_attrs = if( defined(topmed_vcf) ) then ",~{topmed_short_name},vcf,exact,0,FILTER,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
   
   # Tack information about TOPMed annotations onto the output filenames.
   String topmed = if( defined(topmed_short_name) ) then "_" + topmed_short_name else ""
@@ -209,4 +209,58 @@ task IndexAnnotatedVcf {
   output {
     File output_vcf_index = "~{output_file_name}"
   }  
+}
+
+task GatherAndIndexVcfs {
+  input {
+    Array[File] input_vcfs
+    String output_vcf_name
+ 
+    String bcftools_docker = "staphb/bcftools:1.11"
+  }
+  
+  command {
+    bcftools concat ~{sep=' ' input_vcfs} -Oz -o "~{output_vcf_name}"
+    bcftools index -t ~{output_vcf_name}
+  }
+
+  runtime {
+    docker: bcftools_docker
+  }
+
+  output {
+    File output_vcf = "~{output_vcf_name}"
+    File output_vcf_index = "~{output_vcf_name}.tbi"
+  }
+}
+
+task VepFilterVcf {
+  input {
+    File input_vcf
+    Array[String] filters
+    String output_base_name
+    String filter_description = ""
+
+    String vep_docker = "quay.io/jlanej/vep-plugin"
+  }
+
+  String output_vcf_name = output_base_name + "_" + filter_description + ".vcf"
+
+  command {
+    filter_vep \
+      -i ~{input_vcf} \
+      --format "vcf" \
+      --gz \
+      --force_overwrite \
+      -o ~{output_vcf_name} \
+      ~{sep=" " filters}
+  }
+
+  runtime {
+    docker: vep_docker
+  }
+
+  output {
+    File output_vcf = "~{output_vcf_name}"
+  }
 }
