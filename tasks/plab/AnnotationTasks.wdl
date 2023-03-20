@@ -67,7 +67,7 @@ task VariantEffectPredictor {
   # Access the topmed vcf as a file object so Cromwell will substitute the local path for us.
   File tm = topmed_vcf
   String specify_fields = if( defined(vep_fields) ) then "--fields  ~{vep_fields}" else ""
-  String topmed_attrs = if( defined(topmed_vcf) ) then ",~{topmed_short_name},vcf,exact,0,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
+  String topmed_attrs = if( defined(topmed_vcf) ) then ",~{topmed_short_name},vcf,exact,0,FILTER,AF_AFR,AF_SAS,AF_AMR,AF_EAS,AF_EUR,AF" else ""
   
   # Tack information about TOPMed annotations onto the output filenames.
   String topmed = if( defined(topmed_short_name) ) then "_" + topmed_short_name else ""
