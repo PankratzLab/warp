@@ -1,6 +1,6 @@
 version 1.0
 
-## Tasks for VCF annotation.
+## Tasks for VCF annotation using VEP.
 
 import "../../structs/plab/AnnotationStructs.wdl"
 
