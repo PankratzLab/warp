@@ -23,9 +23,9 @@ task SplitMultiallelics {
   command {
     bcftools norm --multiallelics -both \
       -f ~{ref_fasta} \
-      -V ~{vcf_unit.input_vcf} \
       -O z \
-      -o "~{output_file_name}"
+      -o "~{output_file_name}" \
+      ~{vcf_unit.input_vcf}
       
       bcftools index -t ~{output_file_name}
   }
