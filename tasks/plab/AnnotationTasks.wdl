@@ -11,7 +11,7 @@ task SplitMultiallelics {
     File ref_fasta
     File ref_fasta_index
 
-    String bcftools_docker = "docker pull ghcr.io/jlanej/docker-bcftools:sha256-84c0b3ae84b3b9f1666d50244a14b791dc1d3aee0ad03c4337956397887338c8.sig"
+    String bcftools_docker = "ghcr.io/jlanej/docker-bcftools:sha256-84c0b3ae84b3b9f1666d50244a14b791dc1d3aee0ad03c4337956397887338c8.sig"
   }
 
   # Reference the index files even though they aren't passed to bcftools so cromwell will see them.
