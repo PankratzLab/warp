@@ -1,6 +1,7 @@
 version 1.0
 
 ## Tasks for VCF annotation using VEP.
+## Note: SplitMultiallelics needs to use a version of bcftools >= v1.17.
 
 import "../../structs/plab/AnnotationStructs.wdl"
 
@@ -9,35 +10,33 @@ task SplitMultiallelics {
     VcfAndIndex vcf_unit
     File ref_fasta
     File ref_fasta_index
-    File ref_dict
-    Int max_indel_length
 
-    String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.2.6.1"
+    String bcftools_docker = "docker pull ghcr.io/jlanej/docker-bcftools:sha256-84c0b3ae84b3b9f1666d50244a14b791dc1d3aee0ad03c4337956397887338c8.sig"
   }
 
-  # Reference the index and dict files even though they aren't passed as arguments to gatk so cromwell will see them.
+  # Reference the index files even though they aren't passed to bcftools so cromwell will see them.
   File input_vcf_index = vcf_unit.input_vcf_index
   File fasta_index = ref_fasta_index
-  File reference_dict = ref_dict
-  String output_base_name = vcf_unit.output_base_name
+  String output_file_name = vcf_unit.output_base_name + ".vcf.gz"
+  String output_index_name = output_file_name + ".tbi"
 
   command {
-    gatk --java-options "-Xms3000m -Xmx3250m -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" \
-      LeftAlignAndTrimVariants \
-      -R ~{ref_fasta} \
+    bcftools norm --multiallelics -both \
+      -f ~{ref_fasta} \
       -V ~{vcf_unit.input_vcf} \
-      -O "~{output_base_name}.vcf.gz" \
-      --split-multi-allelics \
-      --max-indel-length ~{max_indel_length}
+      -O z \
+      -o "~{output_file_name}"
+      
+      bcftools index -t ~{output_file_name}
   }
 
   runtime {
-    docker: gatk_docker
+    docker: bcftools_docker
   }
 
   output {
-    File output_vcf = "~{output_base_name}.vcf.gz"
-    File output_vcf_index = "~{output_base_name}.vcf.gz.tbi"
+    File output_vcf = "~{output_file_name}
+    File output_vcf_index = "~{output_index_name}"
   }
 }
 

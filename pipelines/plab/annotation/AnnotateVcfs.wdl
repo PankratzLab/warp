@@ -44,16 +44,14 @@ workflow AnnotateVcfs {
     String cadd_plugin_version = ""
   }
 
-  String cadd_cmd = "--plugin CADD,$bash_cadd_sources"
+  String cadd_cmd = "--plugin CADD,$bash_cadd_source1,$bash_cadd_source2,$bash_cadd_source3"
   
   scatter ( unit in vcf_units ) {
     call Annotate.SplitMultiallelics {
       input:
 	vcf_unit = unit,
     	ref_fasta = ref_fasta,
-	ref_fasta_index = ref_fasta_index,
-	ref_dict = ref_dict,
-	max_indel_length = max_indel_length
+	ref_fasta_index = ref_fasta_index
     }
 
     if( !has_cadd_plugin ) {
