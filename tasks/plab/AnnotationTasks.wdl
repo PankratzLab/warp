@@ -35,7 +35,7 @@ task SplitMultiallelics {
   }
 
   output {
-    File output_vcf = "~{output_file_name}
+    File output_vcf = "~{output_file_name}"
     File output_vcf_index = "~{output_index_name}"
   }
 }
