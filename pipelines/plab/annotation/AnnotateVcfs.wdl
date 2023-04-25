@@ -51,9 +51,7 @@ workflow AnnotateVcfs {
       input:
 	vcf_unit = unit,
     	ref_fasta = ref_fasta,
-	ref_fasta_index = ref_fasta_index,
-	ref_dict = ref_dict,
-	max_indel_length = max_indel_length
+	ref_fasta_index = ref_fasta_index
     }
 
     if( !has_cadd_plugin ) {
