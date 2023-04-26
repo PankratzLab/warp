@@ -11,7 +11,7 @@ task SplitMultiallelics {
     File ref_fasta
     File ref_fasta_index
 
-    String bcftools_docker = "staphb/bcftools"
+    String bcftools_docker = "quay.io/jlanej/docker-bcftools"
   }
 
   # Reference the index files even though they aren't passed to bcftools so cromwell will see them.
@@ -22,6 +22,7 @@ task SplitMultiallelics {
 
   command {
     bcftools norm --multiallelics -both \
+      --multi-overlaps . \
       -f ~{ref_fasta} \
       -O z \
       -o "~{output_file_name}" \
