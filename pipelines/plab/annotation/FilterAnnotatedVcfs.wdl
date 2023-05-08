@@ -29,8 +29,7 @@ version 1.0
 ## For program versions, see docker containers. 
 ##
 
-import "./AnnotationTasks.wdl" as Annotate
-#import "/home/pankrat2/public/bin/gatk4/warp/structs/plab/AnnotationStructs.wdl"
+import "../../../tasks/plab/AnnotationTasks.wdl" as Annotate
 
 # WORKFLOW DEFINITION
 workflow FilterAnnotatedVcfs {
