@@ -2,18 +2,21 @@ version 1.0
 
 ## This WDL pipeline implements the Pankratz Lab vcf annotation pipeline, taking as
 ## input .vcf.gz files produced by the GATK4 JointGenotyping pipeline. Multiallelic
-## sites are first split using gatk; the resulting vcf(s) are then passed through
-## several annotation tools, with the output of one tool becoming the input of the
-## next so that annotations are cumulative.
+## sites are first split using bcftools; the resulting vcf(s) are then annotated using
+## VEP with optional custom data sources.
 ##
 ## Requirements/expectations :
 ## - One or more vcfs produced by GATK4 JointGenotyping
 ## - Reference genome (Hg38 with ALT contigs)
 ## - Optionally, the default maximum indel length can be overridden in the input JSON.
-## - Optionally, the default pick string ("rank) can be overridden in the input JSON.
+## - Optionally, the default pick string ("rank") can be overridden in the input JSON.
 ## - Path to the VEP reference genome cache
 ## - Optional custom TOPmed database resource (vcf + index)
 ## - Short name for TOPmed annotations in the vcf, recommended = "TOPMED_<release_date>"
+## - Optional CADD annotation plugin
+## - Required if the CADD plugin is used:
+##   CADD plugin version string
+##   CADD data source file(s) and matching index file(s)
 
 
 import "../../../tasks/plab/AnnotationTasks.wdl" as Annotate
