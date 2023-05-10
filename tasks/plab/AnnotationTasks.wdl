@@ -19,10 +19,17 @@ task SplitMultiallelics {
   File fasta_index = ref_fasta_index
   String output_file_name = vcf_unit.output_base_name + ".vcf.gz"
   String output_index_name = output_file_name + ".tbi"
+  String multiallelics_data_file_name = vcf_unit.output_base_name + ".MAS.txt"
 
   command {
+    bcftools query \
+    -i'GT="Aa" || GT="aA"' \
+    -f'[%CHROM\t%POS\t%ALT\t%SAMPLE\t%GT\n]' \
+    -o ~{multiallelics_data_file_name} \
+    ~{vcf_unit.input_vcf}
+    
     bcftools norm --multiallelics -both \
-      --multi-overlaps . \
+      --multi-overlaps 0 \
       -f ~{ref_fasta} \
       -O z \
       -o "~{output_file_name}" \
@@ -38,6 +45,7 @@ task SplitMultiallelics {
   output {
     File output_vcf = "~{output_file_name}"
     File output_vcf_index = "~{output_index_name}"
+    File output_mult_data = "~{multiallelics_data_file_name}"
   }
 }
 
