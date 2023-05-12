@@ -24,7 +24,7 @@ task SplitMultiallelics {
   command {
     bcftools query \
     -i'GT="Aa" || GT="aA"' \
-    -f'[%CHROM\t%POS\t%ALT\t%SAMPLE\t%GT\n]' \
+    -f'[%CHROM\t%POS\t%REF\t%ALT\t%SAMPLE\t%GT\t%AD\n]' \
     -o ~{multiallelics_data_file_name} \
     ~{vcf_unit.input_vcf}
     
