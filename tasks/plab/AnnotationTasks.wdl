@@ -22,7 +22,8 @@ task SplitMultiallelics {
   String multiallelics_data_file_name = vcf_unit.output_base_name + ".MAS.txt"
 
   command {
-    bcftools view -m3 -Ou ~{vcf_unit.input_vcf | bcftools query \
+    bcftools view -m3 -Ou ~{vcf_unit.input_vcf} | \
+    bcftools query \
     -f'[%CHROM\t%POS\t%REF\t%ALT\t%SAMPLE\t%GT\t%AD\n]' \
     -o ~{multiallelics_data_file_name}
     
