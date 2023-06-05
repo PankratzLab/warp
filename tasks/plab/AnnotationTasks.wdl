@@ -93,7 +93,7 @@ task VariantEffectPredictor {
       --dir_cache ~{vep_cache_dir} \
       --merged \
       --everything \
-      --flag_pick \
+      --pick \
       --pick_order ~{vep_pick_string} \
       --fasta ~{ref_fasta} \
       --~{vep_output_format} \
@@ -173,7 +173,7 @@ task VariantEffectPredictorWithPlugin {
       --dir_cache ~{vep_cache_dir} \
       --merged \
       --everything \
-      --flag_pick \
+      --pick \
       --pick_order ~{vep_pick_string} \
       --fasta ~{ref_fasta} \
       --~{vep_output_format} \
