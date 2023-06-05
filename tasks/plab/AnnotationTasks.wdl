@@ -201,7 +201,7 @@ task IndexAnnotatedVcf {
   input{
     File input_vcf
 
-    String bcftools_docker = "staphb/bcftools:1.11"
+    String bcftools_docker = "quay.io/jlanej/docker-bcftools"
   }
   String output_file_name = basename(input_vcf) + ".tbi"
       
@@ -223,7 +223,7 @@ task GatherAndIndexVcfs {
     Array[File] input_vcfs
     String output_vcf_name
  
-    String bcftools_docker = "staphb/bcftools:1.11"
+    String bcftools_docker = "quay.io/jlanej/docker-bcftools"
   }
   
   command {
