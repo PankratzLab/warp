@@ -20,10 +20,10 @@ version 1.0
 #     transcript_selection_list      -  Set of transcript IDs to use for annotation to override selected transcript.
 #     annotation_defaults            -  Annotations to include in all annotated variants if the annotation is not specified in the data sources (in the format <ANNOTATION>:<VALUE>).  This will add the specified annotation to every annotated variant if it is not already present.
 #     annotation_overrides           -  Override values for annotations (in the format <ANNOTATION>:<VALUE>).  Replaces existing annotations of the given name with given values.
-#     gatk4_override                 -  Override Jar file containing GATK 4.0.  Use this when overriding the docker JAR or when using a backend without docker.
+#     gatk4_jar_override             -  Override Jar file containing GATK 4.0.  Use this when overriding the docker JAR or when using a backend without docker.
 #     funcotator_extra_args          -  Extra command-line arguments to pass through to Funcotator.  (e.g. " --exclude-field foo_field --exclude-field bar_field ")
 #
-# This WDL needs to decide whether to use the ``gatk_jar`` or ``gatk_override`` for the jar location.  As of cromwell-0.24,
+# This WDL needs to decide whether to use the ``gatk_jar`` or ``gatk_jar_override`` for the jar location.  As of cromwell-0.24,
 # this logic *must* go into each task.  Therefore, there is a lot of duplicated code.  This allows users to specify a jar file
 # independent of what is in the docker file.  See the README.md for more info.
 #
@@ -47,7 +47,7 @@ workflow Funcotator {
     Array[String]? transcript_selection_list
     Array[String]? annotation_defaults
     Array[String]? annotation_overrides
-    File? gatk4_override
+    File? gatk4_jar_override
 
     String? funcotator_extra_args
   }
@@ -68,7 +68,7 @@ workflow Funcotator {
       transcript_selection_list = transcript_selection_list,
       annotation_defaults       = annotation_defaults,
       annotation_overrides      = annotation_overrides,
-      gatk_override             = gatk4_override,
+      gatk_override             = gatk4_jar_override,
       gatk_docker               = gatk_docker,
       extra_args                = funcotator_extra_args
   }
