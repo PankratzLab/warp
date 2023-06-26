@@ -9,6 +9,7 @@ version 1.0
 ## - One or more vcfs produced by GATK4 JointGenotyping
 ## - Reference genome (Hg38 with ALT contigs)
 ## - Optionally, the default maximum indel length can be overridden in the input JSON.
+## - Optionally, the default pick action ("flag_pick") can be overridden in the input JSON.
 ## - Optionally, the default pick string ("rank") can be overridden in the input JSON.
 ## - Path to the VEP reference genome cache
 ## - Optional custom TOPmed database resource (vcf + index)
@@ -33,6 +34,7 @@ workflow AnnotateVcfs {
     File ref_fasta_index
     File ref_dict
     Int max_indel_length = 200
+    String vep_pick_action = "flag_pick"
     String vep_pick_string = "rank"
     String vep_output_format = "vcf"
     String? vep_fields
@@ -65,6 +67,7 @@ workflow AnnotateVcfs {
 		output_base_name = unit.output_base_name,
     		ref_fasta = ref_fasta,
 		ref_fasta_index = ref_fasta_index,
+		vep_pick_action = vep_pick_action,
 		vep_pick_string = vep_pick_string,
 		vep_output_format = vep_output_format,
 		vep_fields = vep_fields,
@@ -83,6 +86,7 @@ workflow AnnotateVcfs {
 		output_base_name = unit.output_base_name,
     		ref_fasta = ref_fasta,
 		ref_fasta_index = ref_fasta_index,
+		vep_pick_action = vep_pick_action,
 		vep_pick_string = vep_pick_string,
 		vep_output_format = vep_output_format,
 		vep_fields = vep_fields,
