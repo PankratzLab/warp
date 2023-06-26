@@ -55,6 +55,7 @@ task VariantEffectPredictor {
     String output_base_name
     File ref_fasta
     File ref_fasta_index
+    String vep_pick_action
     String vep_pick_string
     String vep_output_format
     String? vep_fields
@@ -93,7 +94,7 @@ task VariantEffectPredictor {
       --dir_cache ~{vep_cache_dir} \
       --merged \
       --everything \
-      --pick \
+      --~{vep_pick_action} \
       --pick_order ~{vep_pick_string} \
       --fasta ~{ref_fasta} \
       --~{vep_output_format} \
@@ -123,6 +124,7 @@ task VariantEffectPredictorWithPlugin {
     String output_base_name
     File ref_fasta
     File ref_fasta_index
+    String vep_pick_action
     String vep_pick_string
     String vep_output_format
     String? vep_fields
@@ -173,7 +175,7 @@ task VariantEffectPredictorWithPlugin {
       --dir_cache ~{vep_cache_dir} \
       --merged \
       --everything \
-      --pick \
+      --~{vep_pick_action} \
       --pick_order ~{vep_pick_string} \
       --fasta ~{ref_fasta} \
       --~{vep_output_format} \
