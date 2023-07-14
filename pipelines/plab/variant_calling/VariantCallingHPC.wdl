@@ -6,7 +6,7 @@ import "../../../tasks/broad/Utilities.wdl" as Utils
 import "../../../tasks/broad/BamProcessing.wdl" as BamProcessing
 import "../../../tasks/broad/DragenTasks.wdl" as DragenTasks
 
-workflow VariantCalling {
+workflow VariantCallingHPC {
 
 
   String pipeline_version = "2.1.5"
