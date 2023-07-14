@@ -93,7 +93,7 @@ workflow ExomeSingleSample {
       papi_settings = papi_settings
   }
 
-  call ToGvcf.VariantCalling as BamToGvcf {
+  call ToGvcf.VariantCallingHPC as BamToGvcf {
     input:
       calling_interval_list = references.calling_interval_list,
       evaluation_interval_list = references.evaluation_interval_list,
