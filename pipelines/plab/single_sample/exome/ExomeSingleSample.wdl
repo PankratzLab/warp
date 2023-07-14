@@ -18,7 +18,7 @@ import "../../../../tasks/plab/PairedFastqsToAlignedBam.wdl" as FastqsToBam
 import "../../../../tasks/broad/AggregatedBamQC.wdl" as AggregatedQC
 import "../../../../tasks/broad/Qc.wdl" as QC
 import "../../../../tasks/broad/BamProcessing.wdl" as Processing
-import "../../../../pipelines/broad/dna_seq/germline/variant_calling/VariantCalling.wdl" as ToGvcf
+import "../../../../pipelines/plab/variant_calling/VariantCallingHPC.wdl" as ToGvcf
 import "../../../../structs/dna_seq/DNASeqStructs.wdl"
 
 # WORKFLOW DEFINITION
