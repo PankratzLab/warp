@@ -64,7 +64,8 @@ workflow ExomeGermlineSingleSample {
   String recalibrated_bam_basename = sample_and_unmapped_bams.base_file_name + ".aligned.duplicates_marked.recalibrated"
 
   String final_gvcf_base_name = select_first([sample_and_unmapped_bams.final_gvcf_base_name, sample_and_unmapped_bams.base_file_name])
-  
+
+
   call Processing.GenerateSubsettedContaminationResources {
     input:
         bait_set_name = bait_set_name,
@@ -90,7 +91,7 @@ workflow ExomeGermlineSingleSample {
       lod_threshold = lod_threshold,
       recalibrated_bam_basename = recalibrated_bam_basename
   }
-  
+
   call AggregatedQC.AggregatedBamQC {
     input:
       base_recalibrated_bam = UnmappedBamToAlignedBam.output_bam,
