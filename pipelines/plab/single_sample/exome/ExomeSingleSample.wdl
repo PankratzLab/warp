@@ -29,7 +29,10 @@ workflow ExomeSingleSample {
 
 
   input {
-    PapiSettings papi_settings
+    PapiSettings papi_settings = PapiSettings {
+                                      preemptible_tries: 3,
+                                      agg_preemptible_tries: 3
+                                  }
     SampleAndPairedFastqs sample_and_paired_fastqs
     DNASeqSingleSampleReferences references
     VariantCallingScatterSettings scatter_settings
