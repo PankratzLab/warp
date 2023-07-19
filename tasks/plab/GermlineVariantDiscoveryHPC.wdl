@@ -109,6 +109,12 @@ task HaplotypeCaller_GATK4_VCF {
 
   String bamout_arg = if make_bamout then "-bamout ~{vcf_basename}.bamout.bam" else ""
 
+  # We need at least 1 GB of available memory outside of the Java heap in order to execute native code; 
+  # limit Java's total memory to 90% of the node memory. This value is then divided by the number of
+  # intervals over which the processing has been scattered.
+  Int java_total_memory_size_mb=(floor((node_memory*0.9))*1000)
+  Int java_memory_size_mb=java_total_memory_size_mv/hc_scatter
+
   parameter_meta {
     input_bam: {
       localization_optional: true
@@ -117,16 +123,11 @@ task HaplotypeCaller_GATK4_VCF {
 
   command <<<
     set -e
-    # We need at least 1 GB of available memory outside of the Java heap in order to execute native code; limit
-    # Java's total memory to 90% of the node memory, and divide that by the scatter count to determine the per-thread
-    # memory.
-    scatterCount=~{hc_scatter}
-    let java_memory_size_mb=(floor((node_memory*0.9))*1000)/scatterCount
-
-    echo Memory reserved for each Java thread: ${java_memory_size_mb} MB >&2
+    echo Total memory reserved for Java: ${java_total_memory_size_mb} MB >&2
+    echo Starting memory reserved for Java: ${java_memory_size_mb} MB >&2
     echo dont-use-soft-clipped-bases: ${dont_use_soft_clipped_bases} >&2
 
-    gatk --java-options "-Xmx${java_memory_size_mb}m -Xms${java_memory_size_mb}m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
+    gatk --java-options "-Xmx~{java_memory_size_mb}m -Xms~{java_memory_size_mb}m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
       HaplotypeCaller \
       -R ~{ref_fasta} \
       -I ~{input_bam} \
