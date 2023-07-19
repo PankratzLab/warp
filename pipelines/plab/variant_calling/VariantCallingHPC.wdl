@@ -32,6 +32,7 @@ workflow VariantCallingHPC {
     String base_file_name
     String final_vcf_base_name
     Int agg_preemptible_tries
+    Int node_memory
     Boolean make_gvcf = true
     Boolean make_bamout = false
     Boolean use_gatk3_haplotype_caller = false
@@ -111,7 +112,8 @@ workflow VariantCallingHPC {
           use_dragen_hard_filtering = use_dragen_hard_filtering,
           use_spanning_event_genotyping = use_spanning_event_genotyping,
           dragstr_model = DragstrAutoCalibration.dragstr_model,
-          preemptible_tries = agg_preemptible_tries
+          preemptible_tries = agg_preemptible_tries,
+          node_memory = node_memory
        }
 
       if (use_dragen_hard_filtering) {
