@@ -36,7 +36,8 @@ workflow ExomeSingleSample {
     SampleAndPairedFastqs sample_and_paired_fastqs
     DNASeqSingleSampleReferences references
     VariantCallingScatterSettings scatter_settings
-
+    Int node_memory
+  
     File? fingerprint_genotypes_file
     File? fingerprint_genotypes_index
 
@@ -115,7 +116,8 @@ workflow ExomeSingleSample {
       final_vcf_base_name = final_gvcf_base_name,
       dont_use_soft_clipped_bases = dont_use_soft_clipped_bases,
       make_bamout = make_bamout,
-      agg_preemptible_tries = papi_settings.agg_preemptible_tries
+      agg_preemptible_tries = papi_settings.agg_preemptible_tries,
+      node_memory = node_memory
   }
 
   call QC.CollectHsMetrics as CollectHsMetrics {
