@@ -91,6 +91,7 @@ task HaplotypeCaller_GATK4_VCF {
     Boolean make_gvcf
     Boolean make_bamout
     Int preemptible_tries
+    Int node_memory
     Int hc_scatter
     Boolean dont_use_soft_clipped_bases = false
     Boolean run_dragen_mode_variant_calling = false
@@ -98,10 +99,7 @@ task HaplotypeCaller_GATK4_VCF {
     Boolean use_spanning_event_genotyping = true
     File? dragstr_model
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.2.6.1"
-    Int memory_multiplier = 1
   }
-  
-  Int memory_size_mb = ceil(8000 * memory_multiplier)
 
   String output_suffix = if make_gvcf then ".g.vcf.gz" else ".vcf.gz"
   String output_file_name = vcf_basename + output_suffix
@@ -119,26 +117,12 @@ task HaplotypeCaller_GATK4_VCF {
 
   command <<<
     set -e
-    # We need at least 1 GB of available memory outside of the Java heap in order to execute native code, thus, limit
-    # Java's memory by the total memory minus 1 GB. We need to compute the total memory as it might differ from
-    # memory_size_gb because of Cromwell's retry with more memory feature.
-    # Note: In the future this should be done using Cromwell's ${MEM_SIZE} and ${MEM_UNIT} environment variables,
-    #       which do not rely on the output format of the `free` command.
-
-    # Note: On MSI, the free command will report back the full ram of the node, rather than what we can actually reserve. 
-    # This amount differs by node
-    # TO counteract, we will let java_memory_size_mb be ~90% of the available. This is not a perfect solution and is a little wasteful, we could implement partition specific limits instead
-    # TO counteract the issue with one shard and picard (Caused by: java.nio.file.FileSystemException: out: Is a directory etc), divide by number of hc_scatter units requested
-
-    available_memory_mb=$(free -m | awk '/^Mem/ {print $2}')
-    buffer=0.10
-    t=$(echo $buffer*$available_memory_mb| bc|  awk '{print int($1+0.5)}')
-    let java_memory_size_mb=available_memory_mb-t
-
+    # We need at least 1 GB of available memory outside of the Java heap in order to execute native code; limit
+    # Java's total memory to 90% of the node memory, and divide that by the scatter count to determine the per-thread
+    # memory.
     scatterCount=~{hc_scatter}
-    java_memory_size_mb=$(echo "$java_memory_size_mb/5" | bc|  awk '{print int($1+0.5)}')
+    let java_memory_size_mb=(floor((node_memory*0.9))*1000)/scatterCount
 
-    echo Total available memory: ${available_memory_mb} MB >&2
     echo Memory reserved for each Java thread: ${java_memory_size_mb} MB >&2
     echo dont-use-soft-clipped-bases: ${dont_use_soft_clipped_bases} >&2
 
@@ -164,11 +148,6 @@ task HaplotypeCaller_GATK4_VCF {
 
   runtime {
     docker: gatk_docker
-    preemptible: preemptible_tries
-    memory: "~{memory_size_mb} MiB"
-    cpu: "2"
-    bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
   }
 
   output {
