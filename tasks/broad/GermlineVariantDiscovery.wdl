@@ -92,7 +92,6 @@ task HaplotypeCaller_GATK4_VCF {
     Boolean make_bamout
     Int preemptible_tries
     Int hc_scatter
-    Boolean dont_use_soft_clipped_bases = false
     Boolean run_dragen_mode_variant_calling = false
     Boolean use_dragen_hard_filtering = false
     Boolean use_spanning_event_genotyping = true
@@ -124,23 +123,10 @@ task HaplotypeCaller_GATK4_VCF {
     # memory_size_gb because of Cromwell's retry with more memory feature.
     # Note: In the future this should be done using Cromwell's ${MEM_SIZE} and ${MEM_UNIT} environment variables,
     #       which do not rely on the output format of the `free` command.
-
-    # Note: On MSI, the free command will report back the full ram of the node, rather than what we can actually reserve. 
-    # This amount differs by node
-    # TO counteract, we will let java_memory_size_mb be ~90% of the available. This is not a perfect solution and is a little wasteful, we could implement partition specific limits instead
-    # TO counteract the issue with one shard and picard (Caused by: java.nio.file.FileSystemException: out: Is a directory etc), divide by number of hc_scatter units requested
-
     available_memory_mb=$(free -m | awk '/^Mem/ {print $2}')
-    buffer=0.10
-    t=$(echo $buffer*$available_memory_mb| bc|  awk '{print int($1+0.5)}')
-    let java_memory_size_mb=available_memory_mb-t
-
-    scatterCount=~{hc_scatter}
-    java_memory_size_mb=$(echo "$java_memory_size_mb/5" | bc|  awk '{print int($1+0.5)}')
-
+    let java_memory_size_mb=available_memory_mb-1024
     echo Total available memory: ${available_memory_mb} MB >&2
-    echo Memory reserved for each Java thread: ${java_memory_size_mb} MB >&2
-    echo dont-use-soft-clipped-bases: ${dont_use_soft_clipped_bases} >&2
+    echo Memory reserved for Java: ${java_memory_size_mb} MB >&2
 
     gatk --java-options "-Xmx${java_memory_size_mb}m -Xms${java_memory_size_mb}m -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10" \
       HaplotypeCaller \
@@ -150,7 +136,6 @@ task HaplotypeCaller_GATK4_VCF {
       -O ~{output_file_name} \
       -contamination ~{default=0 contamination} \
       -G StandardAnnotation -G StandardHCAnnotation ~{true="-G AS_StandardAnnotation" false="" make_gvcf} \
-      ~{true="--dont-use-soft-clipped-bases" false="" dont_use_soft_clipped_bases} \
       ~{true="--dragen-mode" false="" run_dragen_mode_variant_calling} \
       ~{false="--disable-spanning-event-genotyping" true="" use_spanning_event_genotyping} \
       ~{if defined(dragstr_model) then "--dragstr-params-path " + dragstr_model else ""} \

@@ -4,7 +4,7 @@ version 1.0
 task CheckSamplesUnique {
   input {
     File sample_name_map
-    Int sample_num_threshold = 5 # BI best practice threshold = 50
+    Int sample_num_threshold = 50
   }
 
   command {
@@ -77,22 +77,20 @@ task SplitIntervalList {
 task ImportGVCFs {
 
   input {
-    Array[File] input_gvcfs
-    Array[File] input_gvcf_tbis
+    File sample_name_map
     File interval
     File ref_fasta
     File ref_fasta_index
     File ref_dict
 
     String workspace_dir_name
-    File tmp_dir
 
     Int disk_size
     Int batch_size
 
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.2.6.1"
   }
-  
+
   command <<<
     set -euo pipefail
 
@@ -107,19 +105,15 @@ task ImportGVCFs {
     # a significant amount of non-heap memory for native libraries.
     # Also, testing has shown that the multithreaded reader initialization
     # does not scale well beyond 5 threads, so don't increase beyond that.
-    # If there are multiple capture targets (intervals), as in the case of
-    # exome sequencing, GenomicsDBImport cannot use multiple VCF reader
-    # threads. The value of --reader-threads should be conditional, not hard-coded.
-    gatk --java-options "-Xms8000m -Xmx500000m -XX:+UseStringDeduplication -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" \
+    gatk --java-options "-Xms8000m -Xmx25000m" \
       GenomicsDBImport \
       --genomicsdb-workspace-path ~{workspace_dir_name} \
       --batch-size ~{batch_size} \
       -L ~{interval} \
-      -V ~{sep=" -V " input_gvcfs} \
-      --reader-threads 1 \
-      --merge-input-intervals true\
-      --tmp-dir  ~{tmp_dir} \
-      --consolidate false
+      --sample-name-map ~{sample_name_map} \
+      --reader-threads 5 \
+      --merge-input-intervals \
+      --consolidate
 
     tar -cf ~{workspace_dir_name}.tar ~{workspace_dir_name}
   >>>
@@ -150,8 +144,7 @@ task GenotypeGVCFs {
     File ref_fasta_index
     File ref_dict
 
-    File dbsnp_vcf
-    File dbsnp_vcf_index
+    String dbsnp_vcf
 
     Boolean keep_combined_raw_annotations = false
     String? additional_annotation
