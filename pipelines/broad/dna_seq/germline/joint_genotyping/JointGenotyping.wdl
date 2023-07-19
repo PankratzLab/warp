@@ -13,8 +13,6 @@ workflow JointGenotyping {
 
     String callset_name
     File sample_name_map
-    Array[File] input_gvcfs
-    Array[File] input_gvcf_tbis
 
     File ref_fasta
     File ref_fasta_index
@@ -23,8 +21,6 @@ workflow JointGenotyping {
     File dbsnp_vcf
     File dbsnp_vcf_index
 
-    File genomics_db_tmp_dir
-    
     Int small_disk
     Int medium_disk
     Int large_disk
@@ -114,14 +110,12 @@ workflow JointGenotyping {
     # the Hellbender (GATK engine) team!
     call Tasks.ImportGVCFs {
       input:
-        input_gvcfs = input_gvcfs,
-        input_gvcf_tbis = input_gvcf_tbis,
+        sample_name_map = sample_name_map,
         interval = unpadded_intervals[idx],
         ref_fasta = ref_fasta,
         ref_fasta_index = ref_fasta_index,
         ref_dict = ref_dict,
         workspace_dir_name = "genomicsdb",
-        tmp_dir = genomics_db_tmp_dir,
         disk_size = medium_disk,
         batch_size = 50
     }
@@ -174,7 +168,6 @@ workflow JointGenotyping {
           ref_fasta_index = ref_fasta_index,
           ref_dict = ref_dict,
           dbsnp_vcf = dbsnp_vcf,
-          dbsnp_vcf_index = dbsnp_vcf_index,
           disk_size = medium_disk
       }
     }

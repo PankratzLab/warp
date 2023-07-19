@@ -4,11 +4,12 @@ version 1.0
 ## exome sequencing data to operate on paired fastq files rather than unmapped bam files.
 ##
 
-import "../../tasks/broad/Alignment.wdl" as Alignment
+import "../../tasks/plab/PairedFastqsAlignment.wdl" as Alignment
 import "../../tasks/broad/Qc.wdl" as QC
-import "../../tasks/broad/BamProcessing.wdl" as Processing
+import "../../tasks/plab/BamProcessingDSC.wdl" as Processing
 import "../../tasks/broad/Utilities.wdl" as Utils
-import "../../structs/dna_seq/DNASeqStructs.wdl" as Structs
+import "../../structs/dna_seq/DNASeqStructs.wdl"
+import "../../structs/plab/PairedFastqStructs.wdl"
 
 # WORKFLOW DEFINITION
 workflow PairedFastqsToAlignedBam {

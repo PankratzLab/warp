@@ -17,9 +17,10 @@ version 1.0
 import "../../../../tasks/plab/PairedFastqsToAlignedBam.wdl" as FastqsToBam
 import "../../../../tasks/broad/AggregatedBamQC.wdl" as AggregatedQC
 import "../../../../tasks/broad/Qc.wdl" as QC
-import "../../../../tasks/broad/BamProcessing.wdl" as Processing
+import "../../../../tasks/plab/BamProcessingDSC.wdl" as Processing
 import "../../../../pipelines/plab/variant_calling/VariantCallingHPC.wdl" as ToGvcf
 import "../../../../structs/dna_seq/DNASeqStructs.wdl"
+import "../../../../structs/plab/PairedFastqStructs.wdl"
 
 # WORKFLOW DEFINITION
 workflow ExomeSingleSample {
