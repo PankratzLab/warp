@@ -104,7 +104,7 @@ workflow VariantCallingHPC {
           ref_dict = ref_dict,
           ref_fasta = ref_fasta,
           ref_fasta_index = ref_fasta_index,
-          hc_scatter = hc_scatter,
+          hc_scatter = haplotype_scatter_count,
           make_gvcf = make_gvcf,
           make_bamout = make_bamout,
           dont_use_soft_clipped_bases = dont_use_soft_clipped_bases,
