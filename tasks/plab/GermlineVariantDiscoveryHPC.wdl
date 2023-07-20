@@ -113,7 +113,7 @@ task HaplotypeCaller_GATK4_VCF {
   # limit Java's total memory to 90% of the node memory. This value is then divided by the number of
   # intervals over which the processing has been scattered.
   Int java_total_memory_size_mb=(floor((node_memory*0.9))*1000)
-  Int java_memory_size_mb=java_total_memory_size_mv/hc_scatter
+  Int java_memory_size_mb=java_total_memory_size_mb/hc_scatter
 
   parameter_meta {
     input_bam: {
