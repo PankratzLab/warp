@@ -29,10 +29,6 @@ workflow ExomeSingleSample {
 
 
   input {
-    PapiSettings papi_settings = PapiSettings {
-      preemptible_tries: 3,
-      agg_preemptible_tries: 3
-    }
     SampleAndPairedFastqs sample_and_paired_fastqs
     DNASeqSingleSampleReferences references
     VariantCallingScatterSettings scatter_settings
@@ -56,7 +52,10 @@ workflow ExomeSingleSample {
   String recalibrated_bam_basename = sample_and_paired_fastqs.base_file_name + ".aligned.duplicates_marked.recalibrated"
 
   String final_gvcf_base_name = select_first([sample_and_paired_fastqs.final_gvcf_base_name, sample_and_paired_fastqs.base_file_name])
-
+  PapiSettings papi_settings = PapiSettings {
+      preemptible_tries: 3,
+      agg_preemptible_tries: 3
+    }
 
   call Processing.GenerateSubsettedContaminationResources {
     input:
