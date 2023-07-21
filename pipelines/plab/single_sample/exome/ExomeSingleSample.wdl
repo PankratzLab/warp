@@ -29,6 +29,7 @@ workflow ExomeSingleSample {
 
 
   input {
+    PapiSettings papi_settings
     SampleAndPairedFastqs sample_and_paired_fastqs
     DNASeqSingleSampleReferences references
     VariantCallingScatterSettings scatter_settings
