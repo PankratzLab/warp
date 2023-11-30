@@ -72,7 +72,7 @@ workflow SomalierRelateMultiSampleVcf {
   # Outputs that will be retained when execution is complete
   output {
     File result_html = Relate.result_html
-    File result_groups = Relate.result_groups
+    File? result_groups = Relate.result_groups
     File result_pairs = Relate.result_pairs
     File result_samples = Relate.result_samples
   }
