@@ -80,7 +80,7 @@ workflow SomalierRelateBams {
   # Outputs that will be retained when execution is complete
   output {
     File result_html = Relate.result_html[0]
-    File result_groups = Relate.result_groups[0]
+    File? result_groups = Relate.result_groups[0]
     File result_pairs = Relate.result_pairs[0]
     File result_samples = Relate.result_samples[0]
   }
