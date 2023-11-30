@@ -66,10 +66,10 @@ workflow SomalierRelateBams {
 
         docker = somalier_docker
     }
-  
+    Array[File] infiles = [ExtractSitesSingleSample.output_file]
     call Somalier.Relate {
       input: 
-        extracted_files = ExtractSitesSingleSample.output_file,
+        extracted_files = infiles,
         pedigree = pedigree,
         infer = infer,
         output_base_name = output_base_name,
