@@ -100,7 +100,7 @@ task Relate {
  
   output {
     File result_html = "~{output_base_name}.html"
-    File result_groups = "~{output_base_name}.groups.tsv"
+    File? result_groups = "~{output_base_name}.groups.tsv"
     File result_pairs = "~{output_base_name}.pairs.tsv"
     File result_samples = "~{output_base_name}.samples.tsv"
   }
