@@ -66,18 +66,17 @@ workflow SomalierRelateBams {
 
         docker = somalier_docker
     }
+  
+    call Somalier.Relate {
+      input: 
+        extracted_files = ExtractSitesSingleSample.output_file,
+        pedigree = pedigree,
+        infer = infer,
+        output_base_name = output_base_name,
+
+        docker = somalier_docker
+    }
   }
-
-  call Somalier.Relate {
-    input: 
-      extracted_files = ExtractSitesSingleSample.output_file,
-      pedigree = pedigree,
-      infer = infer,
-      output_base_name = output_base_name,
-
-      docker = somalier_docker
-  }
-
   # Outputs that will be retained when execution is complete
   output {
     File result_html = Relate.result_html
