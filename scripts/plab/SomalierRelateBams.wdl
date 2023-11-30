@@ -62,7 +62,7 @@ workflow SomalierRelateBams {
         input_bam_index = input_bam_index,
         sites_vcf = sites_vcf,
         ref_fasta = ref_fasta,
-	output_base_name = output_base_name,
+	output_file_name = output_base_name,
 
         docker = somalier_docker
     }
