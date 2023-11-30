@@ -33,7 +33,7 @@ task ExtractSitesSingleSample {
     docker: docker
   }
   output {
-    File output_file = "~{output_file_name}"
+    File output_file = "~{output_file_name}.somalier"
     File? extract_stderr_log = "~{output_file_name}.stderr.log"
   }
 }
