@@ -30,7 +30,7 @@ version 1.0
 ## For program versions, see docker containers. 
 ##
 
-import "../tasks/plab/SomalierTasks.wdl" as Somalier
+import "../../tasks/plab/SomalierTasks.wdl" as Somalier
 
 struct BamUnit {
   File input_bam
